@@ -8,624 +8,624 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --ink:#1E2A38; --paper:#F6F3EC; --card:#FFFFFF; --gold:#C08A2E; --teal:#3E6B63;
-    --clay:#B5563C; --line:#E2DCCC; --muted:#6B6656;
-    --female:#B5563C; --male:#3E6B63; --other:#C08A2E; --yes:#8E4A6B; --no:#C9C2AC;
-    --c1:#3E6B63; --c2:#B5563C; --c3:#C08A2E; --c4:#5B6B8C;
-  }
-  *{box-sizing:border-box;}
-  body{margin:0;background:var(--paper);color:var(--ink);font-family:'Noto Sans Lao','Noto Sans',sans-serif;padding:24px 14px;}
-  .wrap{max-width:980px;margin:0 auto;}
-  .topbar{background:var(--ink);color:#F6F3EC;padding:22px 26px;border-radius:14px 14px 0 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
-  .topbar h1{font-size:19px;margin:0;font-weight:700;}
-  .topbar .sub{font-size:12px;color:#C9C2AC;margin-top:3px;font-family:'Space Grotesk',sans-serif;letter-spacing:.5px;text-transform:uppercase;}
-  .tabs{display:flex;gap:6px;background:#EFE9DA;padding:6px;border-bottom:1px solid var(--line);}
-  .tab{flex:1;text-align:center;padding:10px 8px;border-radius:8px;cursor:pointer;font-weight:600;font-size:13.5px;color:var(--muted);user-select:none;}
-  .tab.active{background:var(--ink);color:#F6F3EC;}
-  .panel{background:var(--card);padding:22px 26px 28px;border-radius:0 0 14px 14px;border:1px solid var(--line);border-top:none;}
-  .hidden{display:none;}
-  .field{margin-bottom:16px;}
-  .field label{display:block;font-size:13.5px;font-weight:600;margin-bottom:6px;}
-  .field .hint{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.6;}
-  input[type=text],input[type=number],select{
-    width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:8px;
-    font-family:inherit;font-size:14.5px;background:#FBFAF6;color:var(--ink);
-  }
-  input:focus,select:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
-  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
-  .row4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;}
-  @media(max-width:640px){.row2,.row3,.row4{grid-template-columns:1fr 1fr;}}
-  .choice-group{display:flex;gap:8px;flex-wrap:wrap;}
-  .choice{padding:9px 16px;border:1.5px solid var(--line);border-radius:20px;cursor:pointer;font-size:14px;font-weight:600;color:var(--muted);background:#FBFAF6;}
-  .choice.sel{border-color:var(--ink);background:var(--ink);color:#F6F3EC;}
-  .btn{background:var(--ink);color:#F6F3EC;border:none;padding:12px 20px;border-radius:9px;font-weight:700;font-size:14.5px;cursor:pointer;font-family:inherit;}
-  .btn:hover{background:#2b3c50;}
-  .btn.secondary{background:transparent;color:var(--ink);border:1.5px solid var(--line);}
-  .btn.secondary:hover{border-color:var(--ink);}
-  .btn-row{display:flex;gap:10px;margin-top:6px;flex-wrap:wrap;}
-  .toast{margin-top:12px;font-size:13.5px;color:var(--teal);font-weight:600;min-height:18px;}
-  .section-sub{font-size:12.5px;font-weight:700;color:var(--muted);margin:20px 0 10px;text-transform:uppercase;letter-spacing:.5px;font-family:'Space Grotesk',sans-serif;}
-  .stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px;}
-  @media(max-width:640px){.stat-strip{grid-template-columns:repeat(2,1fr);}}
-  .stat{background:#FBFAF6;border:1px solid var(--line);border-radius:10px;padding:14px 12px;}
-  .stat .n{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;line-height:1;}
-  .stat .l{font-size:11px;color:var(--muted);margin-top:5px;font-weight:600;}
-  .section-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:26px 0 10px;font-family:'Space Grotesk',sans-serif;}
-  .ribbon{display:flex;height:34px;border-radius:8px;overflow:hidden;border:1px solid var(--line);}
-  .ribbon-seg{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;white-space:nowrap;font-family:'Space Grotesk',sans-serif;}
-  .legend{display:flex;gap:16px;margin-top:9px;flex-wrap:wrap;}
-  .legend-item{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);}
-  .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
-  .bars{display:flex;flex-direction:column;gap:9px;}
-  .bar-row{display:grid;grid-template-columns:150px 1fr 34px;align-items:center;gap:10px;}
-  .bar-row .bl{font-size:12.5px;font-weight:600;}
-  .bar-track{background:#EFE9DA;border-radius:6px;height:16px;overflow:hidden;}
-  .bar-fill{height:100%;background:var(--gold);border-radius:6px;}
-  .bar-row .bn{font-family:'Space Grotesk',sans-serif;font-size:12.5px;color:var(--muted);text-align:right;}
-  .empty{color:var(--muted);font-size:13.5px;padding:20px 0;text-align:center;}
-  .entry-list{display:flex;flex-direction:column;gap:10px;margin-top:8px;}
-  .entry-card{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#FBFAF6;}
-  .entry-card .head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
-  .entry-card .name{font-weight:700;font-size:14.5px;}
-  .entry-card .funder-tag{display:inline-block;background:var(--ink);color:#F6F3EC;font-size:11px;font-weight:700;padding:2px 9px;border-radius:12px;margin-top:4px;font-family:'Space Grotesk',sans-serif;}
-  .entry-card .summary{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.7;}
-  .del{color:var(--clay);cursor:pointer;font-size:12px;font-weight:700;background:none;border:none;font-family:inherit;flex-shrink:0;}
-  .setup-banner{background:#FBEFD9;border:1.5px solid var(--gold);border-radius:10px;padding:16px 18px;margin-bottom:18px;font-size:13.5px;line-height:1.7;}
-  .setup-banner code{background:#fff;padding:2px 6px;border-radius:4px;font-size:12px;}
-  .conn-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;}
-  .preview-box{background:#F0EEE3;border:1.5px dashed var(--line);border-radius:10px;padding:14px 16px;font-size:13px;line-height:1.8;margin-top:16px;color:var(--ink);}
-  .period-card{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#FBFAF6;}
-  .period-card .phead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
-  .period-card .plabel{font-weight:700;font-size:14.5px;font-family:'Space Grotesk',sans-serif;}
-  .period-card .ptotal{font-size:12px;color:var(--muted);font-weight:600;}
-  .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:4px 18px;font-size:12.5px;}
-  @media(max-width:520px){.pgrid{grid-template-columns:1fr;}}
-  .pgrid .prow{display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:3px 0;}
-  .pgrid .prow b{font-family:'Space Grotesk',sans-serif;}
-  .psection{font-size:10.5px;font-weight:700;text-transform:uppercase;color:var(--muted);margin:8px 0 3px;letter-spacing:.4px;}
+  :root{
+    --ink:#1E2A38; --paper:#F6F3EC; --card:#FFFFFF; --gold:#C08A2E; --teal:#3E6B63;
+    --clay:#B5563C; --line:#E2DCCC; --muted:#6B6656;
+    --female:#B5563C; --male:#3E6B63; --other:#C08A2E; --yes:#8E4A6B; --no:#C9C2AC;
+    --c1:#3E6B63; --c2:#B5563C; --c3:#C08A2E; --c4:#5B6B8C;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'Noto Sans Lao','Noto Sans',sans-serif;padding:24px 14px;}
+  .wrap{max-width:980px;margin:0 auto;}
+  .topbar{background:var(--ink);color:#F6F3EC;padding:22px 26px;border-radius:14px 14px 0 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+  .topbar h1{font-size:19px;margin:0;font-weight:700;}
+  .topbar .sub{font-size:12px;color:#C9C2AC;margin-top:3px;font-family:'Space Grotesk',sans-serif;letter-spacing:.5px;text-transform:uppercase;}
+  .tabs{display:flex;gap:6px;background:#EFE9DA;padding:6px;border-bottom:1px solid var(--line);}
+  .tab{flex:1;text-align:center;padding:10px 8px;border-radius:8px;cursor:pointer;font-weight:600;font-size:13.5px;color:var(--muted);user-select:none;}
+  .tab.active{background:var(--ink);color:#F6F3EC;}
+  .panel{background:var(--card);padding:22px 26px 28px;border-radius:0 0 14px 14px;border:1px solid var(--line);border-top:none;}
+  .hidden{display:none;}
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:13.5px;font-weight:600;margin-bottom:6px;}
+  .field .hint{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.6;}
+  input[type=text],input[type=number],select{
+    width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:8px;
+    font-family:inherit;font-size:14.5px;background:#FBFAF6;color:var(--ink);
+  }
+  input:focus,select:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+  .row4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;}
+  @media(max-width:640px){.row2,.row3,.row4{grid-template-columns:1fr 1fr;}}
+  .choice-group{display:flex;gap:8px;flex-wrap:wrap;}
+  .choice{padding:9px 16px;border:1.5px solid var(--line);border-radius:20px;cursor:pointer;font-size:14px;font-weight:600;color:var(--muted);background:#FBFAF6;}
+  .choice.sel{border-color:var(--ink);background:var(--ink);color:#F6F3EC;}
+  .btn{background:var(--ink);color:#F6F3EC;border:none;padding:12px 20px;border-radius:9px;font-weight:700;font-size:14.5px;cursor:pointer;font-family:inherit;}
+  .btn:hover{background:#2b3c50;}
+  .btn.secondary{background:transparent;color:var(--ink);border:1.5px solid var(--line);}
+  .btn.secondary:hover{border-color:var(--ink);}
+  .btn-row{display:flex;gap:10px;margin-top:6px;flex-wrap:wrap;}
+  .toast{margin-top:12px;font-size:13.5px;color:var(--teal);font-weight:600;min-height:18px;}
+  .section-sub{font-size:12.5px;font-weight:700;color:var(--muted);margin:20px 0 10px;text-transform:uppercase;letter-spacing:.5px;font-family:'Space Grotesk',sans-serif;}
+  .stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px;}
+  @media(max-width:640px){.stat-strip{grid-template-columns:repeat(2,1fr);}}
+  .stat{background:#FBFAF6;border:1px solid var(--line);border-radius:10px;padding:14px 12px;}
+  .stat .n{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;line-height:1;}
+  .stat .l{font-size:11px;color:var(--muted);margin-top:5px;font-weight:600;}
+  .section-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:26px 0 10px;font-family:'Space Grotesk',sans-serif;}
+  .ribbon{display:flex;height:34px;border-radius:8px;overflow:hidden;border:1px solid var(--line);}
+  .ribbon-seg{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;white-space:nowrap;font-family:'Space Grotesk',sans-serif;}
+  .legend{display:flex;gap:16px;margin-top:9px;flex-wrap:wrap;}
+  .legend-item{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);}
+  .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+  .bars{display:flex;flex-direction:column;gap:9px;}
+  .bar-row{display:grid;grid-template-columns:150px 1fr 34px;align-items:center;gap:10px;}
+  .bar-row .bl{font-size:12.5px;font-weight:600;}
+  .bar-track{background:#EFE9DA;border-radius:6px;height:16px;overflow:hidden;}
+  .bar-fill{height:100%;background:var(--gold);border-radius:6px;}
+  .bar-row .bn{font-family:'Space Grotesk',sans-serif;font-size:12.5px;color:var(--muted);text-align:right;}
+  .empty{color:var(--muted);font-size:13.5px;padding:20px 0;text-align:center;}
+  .entry-list{display:flex;flex-direction:column;gap:10px;margin-top:8px;}
+  .entry-card{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#FBFAF6;}
+  .entry-card .head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+  .entry-card .name{font-weight:700;font-size:14.5px;}
+  .entry-card .funder-tag{display:inline-block;background:var(--ink);color:#F6F3EC;font-size:11px;font-weight:700;padding:2px 9px;border-radius:12px;margin-top:4px;font-family:'Space Grotesk',sans-serif;}
+  .entry-card .summary{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.7;}
+  .del{color:var(--clay);cursor:pointer;font-size:12px;font-weight:700;background:none;border:none;font-family:inherit;flex-shrink:0;}
+  .setup-banner{background:#FBEFD9;border:1.5px solid var(--gold);border-radius:10px;padding:16px 18px;margin-bottom:18px;font-size:13.5px;line-height:1.7;}
+  .setup-banner code{background:#fff;padding:2px 6px;border-radius:4px;font-size:12px;}
+  .conn-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;}
+  .preview-box{background:#F0EEE3;border:1.5px dashed var(--line);border-radius:10px;padding:14px 16px;font-size:13px;line-height:1.8;margin-top:16px;color:var(--ink);}
+  .period-card{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#FBFAF6;}
+  .period-card .phead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
+  .period-card .plabel{font-weight:700;font-size:14.5px;font-family:'Space Grotesk',sans-serif;}
+  .period-card .ptotal{font-size:12px;color:var(--muted);font-weight:600;}
+  .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:4px 18px;font-size:12.5px;}
+  @media(max-width:520px){.pgrid{grid-template-columns:1fr;}}
+  .pgrid .prow{display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:3px 0;}
+  .pgrid .prow b{font-family:'Space Grotesk',sans-serif;}
+  .psection{font-size:10.5px;font-weight:700;text-transform:uppercase;color:var(--muted);margin:8px 0 3px;letter-spacing:.4px;}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="topbar">
-    <div>
-      <h1>ບັນທຶກຂໍ້ມູນ GEDSI - ກິດຈະກຳ</h1>
-      <div class="sub">Activity Participation Tracker</div>
-    </div>
-    <div id="totalBadge" style="font-family:'Space Grotesk',sans-serif;font-size:13px;color:#C9C2AC;">0 ກິດຈະກຳ</div>
-  </div>
+  <div class="topbar">
+    <div>
+      <h1>ບັນທຶກຂໍ້ມູນ GEDSI - ກິດຈະກຳ</h1>
+      <div class="sub">Activity Participation Tracker</div>
+    </div>
+    <div id="totalBadge" style="font-family:'Space Grotesk',sans-serif;font-size:13px;color:#C9C2AC;">0 ກິດຈະກຳ</div>
+  </div>
 
-  <div class="tabs">
-    <div class="tab active" id="tabEntryBtn">➕ ປ້ອນຂໍ້ມູນ</div>
-    <div class="tab" id="tabDashBtn">📊 ສະຫຼຸບຂໍ້ມູນ</div>
-    <div class="tab" id="tabSetBtn">⚙️ ຕັ້ງຄ່າ</div>
-  </div>
+  <div class="tabs">
+    <div class="tab active" id="tabEntryBtn">➕ ປ້ອນຂໍ້ມູນ</div>
+    <div class="tab" id="tabDashBtn">📊 ສະຫຼຸບຂໍ້ມູນ</div>
+    <div class="tab" id="tabSetBtn">⚙️ ຕັ້ງຄ່າ</div>
+  </div>
 
-  <div class="panel" id="panelEntry">
-    <div class="field">
-      <label>1. ຊື່ກິດຈະກຳ</label>
-      <input type="text" id="fActivity" placeholder="ເຊັ່ນ: ການຝຶກອົບຮົມ GEDSI ບ້ານ...">
-    </div>
+  <div class="panel" id="panelEntry">
+    <div class="field">
+      <label>1. ຊື່ກິດຈະກຳ</label>
+      <input type="text" id="fActivity" placeholder="ເຊັ່ນ: ການຝຶກອົບຮົມ GEDSI ບ້ານ...">
+    </div>
 
-    <div class="field">
-      <label>ວັນທີກິດຈະກຳ</label>
-      <input type="date" id="fActivityDate">
-    </div>
+    <div class="field">
+      <label>ວັນທີກິດຈະກຳ</label>
+      <input type="date" id="fActivityDate">
+    </div>
 
-    <div class="field">
-      <label>2. ຜູ້ໃຫ້ທຶນ</label>
-      <select id="fFunder">
-        <option value="">-- ເລືອກຜູ້ໃຫ້ທຶນ --</option>
-        <option value="RDA">RDA</option>
-        <option value="WWF">WWF</option>
-        <option value="UNICEF">UNICEF</option>
-        <option value="CCL">CCL</option>
-        <option value="Child's Dream Laos">Child's Dream Laos</option>
-      </select>
-    </div>
+    <div class="field">
+      <label>2. ຜູ້ໃຫ້ທຶນ</label>
+      <select id="fFunder">
+        <option value="">-- ເລືອກຜູ້ໃຫ້ທຶນ --</option>
+        <option value="RDA">RDA</option>
+        <option value="WWF">WWF</option>
+        <option value="UNICEF">UNICEF</option>
+        <option value="CCL">CCL</option>
+        <option value="Child's Dream Laos">Child's Dream Laos</option>
+      </select>
+    </div>
 
-    <div class="section-sub">ຈຳນວນຜູ້ເຂົ້າຮ່ວມ ຕາມເພດ</div>
-    <div class="row3">
-      <div class="field"><label>ຍິງ</label><input type="number" id="fFemale" min="0" value="0"></div>
-      <div class="field"><label>ຊາຍ</label><input type="number" id="fMale" min="0" value="0"></div>
-      <div class="field"><label>ອື່ນໆ</label><input type="number" id="fOtherGender" min="0" value="0"></div>
-    </div>
+    <div class="section-sub">ຈຳນວນຜູ້ເຂົ້າຮ່ວມ ຕາມເພດ</div>
+    <div class="row3">
+      <div class="field"><label>ຍິງ</label><input type="number" id="fFemale" min="0" value="0"></div>
+      <div class="field"><label>ຊາຍ</label><input type="number" id="fMale" min="0" value="0"></div>
+      <div class="field"><label>ອື່ນໆ</label><input type="number" id="fOtherGender" min="0" value="0"></div>
+    </div>
 
-    <div class="section-sub">ຈຳນວນຜູ້ເຂົ້າຮ່ວມ ຕາມອາຍຸ</div>
-    <div class="row4">
-      <div class="field"><label>ຕ່ຳກວ່າ 18 ປີ</label><input type="number" id="fAgeU18" min="0" value="0"></div>
-      <div class="field"><label>18 - 35 ປີ</label><input type="number" id="fAge1835" min="0" value="0"></div>
-      <div class="field"><label>35 - 60 ປີ</label><input type="number" id="fAge3560" min="0" value="0"></div>
-      <div class="field"><label>ຫຼາຍກວ່າ 60 ປີ</label><input type="number" id="fAge60plus" min="0" value="0"></div>
-    </div>
+    <div class="section-sub">ຈຳນວນຜູ້ເຂົ້າຮ່ວມ ຕາມອາຍຸ</div>
+    <div class="row4">
+      <div class="field"><label>ຕ່ຳກວ່າ 18 ປີ</label><input type="number" id="fAgeU18" min="0" value="0"></div>
+      <div class="field"><label>18 - 35 ປີ</label><input type="number" id="fAge1835" min="0" value="0"></div>
+      <div class="field"><label>35 - 60 ປີ</label><input type="number" id="fAge3560" min="0" value="0"></div>
+      <div class="field"><label>ຫຼາຍກວ່າ 60 ປີ</label><input type="number" id="fAge60plus" min="0" value="0"></div>
+    </div>
 
-    <div class="section-sub">ຄວາມພິການ</div>
-    <div class="field">
-      <label>ມີຄົນທີ່ມີຄວາມບົກພ່ອງເຂົ້າຮ່ວມ ຫຼື ບໍ່?</label>
-      <div class="choice-group" id="disGroup">
-        <div class="choice" data-val="No">ບໍ່ມີ</div>
-        <div class="choice" data-val="Yes">ມີ</div>
-      </div>
-    </div>
-    <div class="hidden" id="disTypeFields">
-      <div class="row2">
-        <div class="field"><label>ດ້ານຮ່າງກາຍ</label><input type="number" id="fDisPhysical" min="0" value="0"></div>
-        <div class="field"><label>ດ້ານປະສາດສຳພັດ</label><input type="number" id="fDisSensory" min="0" value="0"></div>
-      </div>
-      <div class="row2">
-        <div class="field"><label>ດ້ານສັງຄົມຈິດຕະວິທະຍາ</label><input type="number" id="fDisPsychosocial" min="0" value="0"></div>
-        <div class="field"><label>ດ້ານສະໝອງ ແລະ ສະຕິປັນຍາ</label><input type="number" id="fDisIntellectual" min="0" value="0"></div>
-      </div>
-    </div>
+    <div class="section-sub">ຄວາມພິການ</div>
+    <div class="field">
+      <label>ມີຄົນທີ່ມີຄວາມບົກພ່ອງເຂົ້າຮ່ວມ ຫຼື ບໍ່?</label>
+      <div class="choice-group" id="disGroup">
+        <div class="choice" data-val="No">ບໍ່ມີ</div>
+        <div class="choice" data-val="Yes">ມີ</div>
+      </div>
+    </div>
+    <div class="hidden" id="disTypeFields">
+      <div class="row2">
+        <div class="field"><label>ດ້ານຮ່າງກາຍ</label><input type="number" id="fDisPhysical" min="0" value="0"></div>
+        <div class="field"><label>ດ້ານປະສາດສຳພັດ</label><input type="number" id="fDisSensory" min="0" value="0"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>ດ້ານສັງຄົມຈິດຕະວິທະຍາ</label><input type="number" id="fDisPsychosocial" min="0" value="0"></div>
+        <div class="field"><label>ດ້ານສະໝອງ ແລະ ສະຕິປັນຍາ</label><input type="number" id="fDisIntellectual" min="0" value="0"></div>
+      </div>
+    </div>
 
-    <div class="section-sub">ສະຫຼຸບ (ອັດຕະໂນມັດ)</div>
-    <div class="preview-box" id="summaryPreview">ຕື່ມຂໍ້ມູນຂ້າງເທິງເພື່ອເບິ່ງສະຫຼຸບ...</div>
+    <div class="section-sub">ສະຫຼຸບ (ອັດຕະໂນມັດ)</div>
+    <div class="preview-box" id="summaryPreview">ຕື່ມຂໍ້ມູນຂ້າງເທິງເພື່ອເບິ່ງສະຫຼຸບ...</div>
 
-    <div class="btn-row" style="margin-top:18px;">
-      <button class="btn" id="saveBtn">💾 ບັນທຶກຂໍ້ມູນ</button>
-      <button class="btn secondary" id="clearBtn">ລ້າງແບບຟອມ</button>
-    </div>
-    <div class="toast" id="toast"></div>
-  </div>
+    <div class="btn-row" style="margin-top:18px;">
+      <button class="btn" id="saveBtn">💾 ບັນທຶກຂໍ້ມູນ</button>
+      <button class="btn secondary" id="clearBtn">ລ້າງແບບຟອມ</button>
+    </div>
+    <div class="toast" id="toast"></div>
+  </div>
 
-  <div class="panel hidden" id="panelDash">
-    <div class="btn-row" style="margin-bottom:16px;">
-      <button class="btn secondary" id="refreshBtn">🔄 ໂຫຼດຂໍ້ມູນລ້າສຸດ</button>
-      <button class="btn secondary" id="exportBtn">⬇️ ສົ່ງອອກເປັນ CSV</button>
-    </div>
-    <div class="stat-strip">
-      <div class="stat"><div class="n" id="statActivities">0</div><div class="l">ຈຳນວນກິດຈະກຳ</div></div>
-      <div class="stat"><div class="n" id="statTotal">0</div><div class="l">ຜູ້ເຂົ້າຮ່ວມທັງໝົດ</div></div>
-      <div class="stat"><div class="n" id="statDis">0</div><div class="l">ຜູ້ເຂົ້າຮ່ວມທີ່ມີຄວາມພິການ</div></div>
-      <div class="stat"><div class="n" id="statFunders">0</div><div class="l">ຈຳນວນຜູ້ໃຫ້ທຶນ</div></div>
-    </div>
+  <div class="panel hidden" id="panelDash">
+    <div class="btn-row" style="margin-bottom:16px;">
+      <button class="btn secondary" id="refreshBtn">🔄 ໂຫຼດຂໍ້ມູນລ້າສຸດ</button>
+      <button class="btn secondary" id="exportBtn">⬇️ ສົ່ງອອກເປັນ CSV</button>
+    </div>
+    <div class="stat-strip">
+      <div class="stat"><div class="n" id="statActivities">0</div><div class="l">ຈຳນວນກິດຈະກຳ</div></div>
+      <div class="stat"><div class="n" id="statTotal">0</div><div class="l">ຜູ້ເຂົ້າຮ່ວມທັງໝົດ</div></div>
+      <div class="stat"><div class="n" id="statDis">0</div><div class="l">ຜູ້ເຂົ້າຮ່ວມທີ່ມີຄວາມພິການ</div></div>
+      <div class="stat"><div class="n" id="statFunders">0</div><div class="l">ຈຳນວນຜູ້ໃຫ້ທຶນ</div></div>
+    </div>
 
-    <div class="section-title">ອົງປະກອບຕາມເພດ</div>
-    <div class="ribbon" id="genderRibbon"></div>
-    <div class="legend" id="genderLegend"></div>
+    <div class="section-title">ອົງປະກອບຕາມເພດ</div>
+    <div class="ribbon" id="genderRibbon"></div>
+    <div class="legend" id="genderLegend"></div>
 
-    <div class="section-title">ອົງປະກອບຕາມອາຍຸ</div>
-    <div class="ribbon" id="ageRibbon"></div>
-    <div class="legend" id="ageLegend"></div>
+    <div class="section-title">ອົງປະກອບຕາມອາຍຸ</div>
+    <div class="ribbon" id="ageRibbon"></div>
+    <div class="legend" id="ageLegend"></div>
 
-    <div class="section-title">ປະເພດຄວາມພິການ</div>
-    <div class="bars" id="disBars"></div>
+    <div class="section-title">ປະເພດຄວາມພິການ</div>
+    <div class="bars" id="disBars"></div>
 
-    <div class="section-title">ຜູ້ໃຫ້ທຶນ</div>
-    <div class="bars" id="funderBars"></div>
+    <div class="section-title">ຜູ້ໃຫ້ທຶນ</div>
+    <div class="bars" id="funderBars"></div>
 
-    <div class="section-title">ລາຍງານປະຈຳປີ</div>
-    <div class="field" style="max-width:220px;">
-      <select id="yearSelect"></select>
-    </div>
-    <div class="entry-list" id="yearReport"></div>
+    <div class="section-title">ລາຍງານປະຈຳປີ</div>
+    <div class="field" style="max-width:220px;">
+      <select id="yearSelect"></select>
+    </div>
+    <div class="entry-list" id="yearReport"></div>
 
-    <div class="section-title">ລາຍງານປະຈຳເດືອນ</div>
-    <div class="field" style="max-width:220px;">
-      <select id="monthSelect"></select>
-    </div>
-    <div class="entry-list" id="monthReport"></div>
+    <div class="section-title">ລາຍງານປະຈຳເດືອນ</div>
+    <div class="field" style="max-width:220px;">
+      <select id="monthSelect"></select>
+    </div>
+    <div class="entry-list" id="monthReport"></div>
 
-    <div class="section-title">ລາຍການກິດຈະກຳ</div>
-    <div class="entry-list" id="entryList"></div>
-  </div>
+    <div class="section-title">ລາຍການກິດຈະກຳ</div>
+    <div class="entry-list" id="entryList"></div>
+  </div>
 
-  <div class="panel hidden" id="panelSet">
-    <div class="field">
-      <label><span class="conn-dot" id="connDot" style="background:var(--clay)"></span>Google Apps Script Web App URL</label>
-      <input type="text" id="fScriptUrl" placeholder="https://script.google.com/macros/s/XXXXXXXX/exec">
-      <div class="hint">ລິ້ງນີ້ຖືກຝັງໄວ້ໃນແອັບແລ້ວໂດຍຄ່າເລີ່ມຕົ້ນ — ບໍ່ຈຳເປັນຕ້ອງຕັ້ງຄ່າອີກ. ໃຊ້ຊ່ອງນີ້ພຽງແຕ່ຖ້າຕ້ອງການປ່ຽນໄປໃຊ້ Google Sheet ອື່ນ (ຈະຈື່ໄວ້ສະເພາະ browser ນີ້).</div>
-    </div>
-    <div class="btn-row">
-      <button class="btn" id="saveUrlBtn">💾 ບັນທຶກລິ້ງ</button>
-      <button class="btn secondary" id="testUrlBtn">🔄 ທົດສອບການເຊື່ອມຕໍ່</button>
-    </div>
-    <div class="toast" id="toastSet"></div>
-  </div>
+  <div class="panel hidden" id="panelSet">
+    <div class="field">
+      <label><span class="conn-dot" id="connDot" style="background:var(--clay)"></span>Google Apps Script Web App URL</label>
+      <input type="text" id="fScriptUrl" placeholder="https://script.google.com/macros/s/XXXXXXXX/exec">
+      <div class="hint">ລິ້ງນີ້ຖືກຝັງໄວ້ໃນແອັບແລ້ວໂດຍຄ່າເລີ່ມຕົ້ນ — ບໍ່ຈຳເປັນຕ້ອງຕັ້ງຄ່າອີກ. ໃຊ້ຊ່ອງນີ້ພຽງແຕ່ຖ້າຕ້ອງການປ່ຽນໄປໃຊ້ Google Sheet ອື່ນ (ຈະຈື່ໄວ້ສະເພາະ browser ນີ້).</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn" id="saveUrlBtn">💾 ບັນທຶກລິ້ງ</button>
+      <button class="btn secondary" id="testUrlBtn">🔄 ທົດສອບການເຊື່ອມຕໍ່</button>
+    </div>
+    <div class="toast" id="toastSet"></div>
+  </div>
 </div>
 
 <script>
 (function(){
-  const SCRIPT_URL_KEY = 'gedsi_activity_script_url';
-  const DEFAULT_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwdBHJI4s53I6E4YVEi7LhFat5e8pmXRfBG-SpCcZbtiQ1nBV7taS5FBFyXd3I_SBuw6g/exec';
-  let entries = [];
-  let selDis = null;
-  let scriptUrl = localStorage.getItem(SCRIPT_URL_KEY) || DEFAULT_SCRIPT_URL;
+  const SCRIPT_URL_KEY = 'gedsi_activity_script_url';
+  const DEFAULT_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwdBHJI4s53I6E4YVEi7LhFat5e8pmXRfBG-SpCcZbtiQ1nBV7taS5FBFyXd3I_SBuw6g/exec';
+  let entries = [];
+  let selDis = null;
+  let scriptUrl = localStorage.getItem(SCRIPT_URL_KEY) || DEFAULT_SCRIPT_URL;
 
-  const $ = id => document.getElementById(id);
-  const num = id => parseInt($(id).value) || 0;
-  function todayStr(){ return new Date().toISOString().slice(0,10); }
-  $('fActivityDate').value = todayStr();
+  const $ = id => document.getElementById(id);
+  const num = id => parseInt($(id).value) || 0;
+  function todayStr(){ return new Date().toISOString().slice(0,10); }
+  $('fActivityDate').value = todayStr();
 
-  $('fScriptUrl').value = scriptUrl;
-  updateConnDot();
-  function updateConnDot(){
-    $('connDot').style.background = scriptUrl ? 'var(--teal)' : 'var(--clay)';
-  }
+  $('fScriptUrl').value = scriptUrl;
+  updateConnDot();
+  function updateConnDot(){
+    $('connDot').style.background = scriptUrl ? 'var(--teal)' : 'var(--clay)';
+  }
 
-  $('tabEntryBtn').onclick = () => switchTab('entry');
-  $('tabDashBtn').onclick = () => switchTab('dash');
-  $('tabSetBtn').onclick = () => switchTab('set');
-  function switchTab(which){
-    $('tabEntryBtn').classList.toggle('active', which==='entry');
-    $('tabDashBtn').classList.toggle('active', which==='dash');
-    $('tabSetBtn').classList.toggle('active', which==='set');
-    $('panelEntry').classList.toggle('hidden', which!=='entry');
-    $('panelDash').classList.toggle('hidden', which!=='dash');
-    $('panelSet').classList.toggle('hidden', which!=='set');
-    if(which==='dash') refreshFromSheet();
-  }
+  $('tabEntryBtn').onclick = () => switchTab('entry');
+  $('tabDashBtn').onclick = () => switchTab('dash');
+  $('tabSetBtn').onclick = () => switchTab('set');
+  function switchTab(which){
+    $('tabEntryBtn').classList.toggle('active', which==='entry');
+    $('tabDashBtn').classList.toggle('active', which==='dash');
+    $('tabSetBtn').classList.toggle('active', which==='set');
+    $('panelEntry').classList.toggle('hidden', which!=='entry');
+    $('panelDash').classList.toggle('hidden', which!=='dash');
+    $('panelSet').classList.toggle('hidden', which!=='set');
+    if(which==='dash') refreshFromSheet();
+  }
 
-  document.querySelectorAll('#disGroup .choice').forEach(el=>{
-    el.onclick = ()=>{
-      document.querySelectorAll('#disGroup .choice').forEach(c=>c.classList.remove('sel'));
-      el.classList.add('sel'); selDis = el.dataset.val;
-      $('disTypeFields').classList.toggle('hidden', selDis !== 'Yes');
-      updatePreview();
-    };
-  });
+  document.querySelectorAll('#disGroup .choice').forEach(el=>{
+    el.onclick = ()=>{
+      document.querySelectorAll('#disGroup .choice').forEach(c=>c.classList.remove('sel'));
+      el.classList.add('sel'); selDis = el.dataset.val;
+      $('disTypeFields').classList.toggle('hidden', selDis !== 'Yes');
+      updatePreview();
+    };
+  });
 
-  ['fActivity','fActivityDate','fFunder','fFemale','fMale','fOtherGender','fAgeU18','fAge1835','fAge3560','fAge60plus',
-   'fDisPhysical','fDisSensory','fDisPsychosocial','fDisIntellectual'].forEach(id=>{
-    $(id).addEventListener('input', updatePreview);
-    $(id).addEventListener('change', updatePreview);
-  });
+  ['fActivity','fActivityDate','fFunder','fFemale','fMale','fOtherGender','fAgeU18','fAge1835','fAge3560','fAge60plus',
+   'fDisPhysical','fDisSensory','fDisPsychosocial','fDisIntellectual'].forEach(id=>{
+    $(id).addEventListener('input', updatePreview);
+    $(id).addEventListener('change', updatePreview);
+  });
 
-  function buildSummary(){
-    const female = num('fFemale'), male = num('fMale'), other = num('fOtherGender');
-    const total = female + male + other;
-    const u18 = num('fAgeU18'), a1835 = num('fAge1835'), a3560 = num('fAge3560'), a60 = num('fAge60plus');
-    const activity = $('fActivity').value.trim() || 'ກິດຈະກຳນີ້';
-    const funder = $('fFunder').value;
-    const adate = $('fActivityDate').value;
+  function buildSummary(){
+    const female = num('fFemale'), male = num('fMale'), other = num('fOtherGender');
+    const total = female + male + other;
+    const u18 = num('fAgeU18'), a1835 = num('fAge1835'), a3560 = num('fAge3560'), a60 = num('fAge60plus');
+    const activity = $('fActivity').value.trim() || 'ກິດຈະກຳນີ້';
+    const funder = $('fFunder').value;
+    const adate = $('fActivityDate').value;
 
-    let disText = 'ບໍ່ມີຜູ້ເຂົ້າຮ່ວມທີ່ມີຄວາມພິການ';
-    let disTotal = 0;
-    if(selDis === 'Yes'){
-      const dp = num('fDisPhysical'), ds = num('fDisSensory'), dpsy = num('fDisPsychosocial'), di = num('fDisIntellectual');
-      disTotal = dp+ds+dpsy+di;
-      const parts = [];
-      if(dp) parts.push('ດ້ານຮ່າງກາຍ ' + dp);
-      if(ds) parts.push('ດ້ານປະສາດສຳພັດ ' + ds);
-      if(dpsy) parts.push('ດ້ານສັງຄົມຈິດຕະວິທະຍາ ' + dpsy);
-      if(di) parts.push('ດ້ານສະໝອງ ແລະ ສະຕິປັນຍາ ' + di);
-      disText = 'ມີຜູ້ເຂົ້າຮ່ວມທີ່ມີຄວາມພິການທັງໝົດ ' + disTotal + ' ຄົນ' + (parts.length? ' (' + parts.join(', ') + ')' : '');
-    }
+    let disText = 'ບໍ່ມີຜູ້ເຂົ້າຮ່ວມທີ່ມີຄວາມພິການ';
+    let disTotal = 0;
+    if(selDis === 'Yes'){
+      const dp = num('fDisPhysical'), ds = num('fDisSensory'), dpsy = num('fDisPsychosocial'), di = num('fDisIntellectual');
+      disTotal = dp+ds+dpsy+di;
+      const parts = [];
+      if(dp) parts.push('ດ້ານຮ່າງກາຍ ' + dp);
+      if(ds) parts.push('ດ້ານປະສາດສຳພັດ ' + ds);
+      if(dpsy) parts.push('ດ້ານສັງຄົມຈິດຕະວິທະຍາ ' + dpsy);
+      if(di) parts.push('ດ້ານສະໝອງ ແລະ ສະຕິປັນຍາ ' + di);
+      disText = 'ມີຜູ້ເຂົ້າຮ່ວມທີ່ມີຄວາມພິການທັງໝົດ ' + disTotal + ' ຄົນ' + (parts.length? ' (' + parts.join(', ') + ')' : '');
+    }
 
-    return `${activity}${adate? ' ('+adate+')':''}${funder? ' — ຜູ້ໃຫ້ທຶນ: '+funder:''} — ຜູ້ເຂົ້າຮ່ວມທັງໝົດ ${total} ຄົນ. ` +
-      `ຕາມເພດ: ຍິງ ${female}, ຊາຍ ${male}, ອື່ນໆ ${other}. ` +
-      `ຕາມອາຍຸ: ຕ່ຳກວ່າ18 = ${u18}, 18-35 = ${a1835}, 35-60 = ${a3560}, ຫຼາຍກວ່າ60 = ${a60}. ` +
-      disText + '.';
-  }
+    return `${activity}${adate? ' ('+adate+')':''}${funder? ' — ຜູ້ໃຫ້ທຶນ: '+funder:''} — ຜູ້ເຂົ້າຮ່ວມທັງໝົດ ${total} ຄົນ. ` +
+      `ຕາມເພດ: ຍິງ ${female}, ຊາຍ ${male}, ອື່ນໆ ${other}. ` +
+      `ຕາມອາຍຸ: ຕ່ຳກວ່າ18 = ${u18}, 18-35 = ${a1835}, 35-60 = ${a3560}, ຫຼາຍກວ່າ60 = ${a60}. ` +
+      disText + '.';
+  }
 
-  function updatePreview(){
-    $('summaryPreview').textContent = buildSummary();
-  }
-  updatePreview();
+  function updatePreview(){
+    $('summaryPreview').textContent = buildSummary();
+  }
+  updatePreview();
 
-  function resetForm(){
-    $('fActivity').value=''; $('fFunder').value=''; $('fActivityDate').value = todayStr();
-    ['fFemale','fMale','fOtherGender','fAgeU18','fAge1835','fAge3560','fAge60plus',
-     'fDisPhysical','fDisSensory','fDisPsychosocial','fDisIntellectual'].forEach(id=>{ $(id).value = 0; });
-    selDis = null;
-    document.querySelectorAll('#disGroup .choice').forEach(c=>c.classList.remove('sel'));
-    $('disTypeFields').classList.add('hidden');
-    updatePreview();
-  }
-  $('clearBtn').onclick = resetForm;
+  function resetForm(){
+    $('fActivity').value=''; $('fFunder').value=''; $('fActivityDate').value = todayStr();
+    ['fFemale','fMale','fOtherGender','fAgeU18','fAge1835','fAge3560','fAge60plus',
+     'fDisPhysical','fDisSensory','fDisPsychosocial','fDisIntellectual'].forEach(id=>{ $(id).value = 0; });
+    selDis = null;
+    document.querySelectorAll('#disGroup .choice').forEach(c=>c.classList.remove('sel'));
+    $('disTypeFields').classList.add('hidden');
+    updatePreview();
+  }
+  $('clearBtn').onclick = resetForm;
 
-  function jsonp(url){
-    return new Promise((resolve, reject)=>{
-      const cbName = 'gedsi_cb_' + Date.now() + '_' + Math.floor(Math.random()*100000);
-      const script = document.createElement('script');
-      let done = false;
-      window[cbName] = (data)=>{
-        done = true;
-        resolve(data);
-        cleanup();
-      };
-      function cleanup(){
-        delete window[cbName];
-        if(script.parentNode) script.parentNode.removeChild(script);
-      }
-      script.onerror = ()=>{
-        if(!done){ reject(new Error('ໂຫຼດຂໍ້ມູນບໍ່ສຳເລັດ (ກວດ URL ຄືນ)')); cleanup(); }
-      };
-      script.src = url + (url.indexOf('?')>-1 ? '&' : '?') + 'callback=' + cbName;
-      document.body.appendChild(script);
-      setTimeout(()=>{
-        if(!done){ reject(new Error('ໝົດເວລາລໍຖ້າ (timeout)')); cleanup(); }
-      }, 12000);
-    });
-  }
+  function jsonp(url){
+    return new Promise((resolve, reject)=>{
+      const cbName = 'gedsi_cb_' + Date.now() + '_' + Math.floor(Math.random()*100000);
+      const script = document.createElement('script');
+      let done = false;
+      window[cbName] = (data)=>{
+        done = true;
+        resolve(data);
+        cleanup();
+      };
+      function cleanup(){
+        delete window[cbName];
+        if(script.parentNode) script.parentNode.removeChild(script);
+      }
+      script.onerror = ()=>{
+        if(!done){ reject(new Error('ໂຫຼດຂໍ້ມູນບໍ່ສຳເລັດ (ກວດ URL ຄືນ)')); cleanup(); }
+      };
+      script.src = url + (url.indexOf('?')>-1 ? '&' : '?') + 'callback=' + cbName;
+      document.body.appendChild(script);
+      setTimeout(()=>{
+        if(!done){ reject(new Error('ໝົດເວລາລໍຖ້າ (timeout)')); cleanup(); }
+      }, 12000);
+    });
+  }
 
-  $('saveUrlBtn').onclick = ()=>{
-    scriptUrl = $('fScriptUrl').value.trim();
-    localStorage.setItem(SCRIPT_URL_KEY, scriptUrl);
-    updateConnDot();
-    $('toastSet').style.color='var(--teal)';
-    $('toastSet').textContent = '✓ ບັນທຶກລິ້ງແລ້ວ';
-  };
+  $('saveUrlBtn').onclick = ()=>{
+    scriptUrl = $('fScriptUrl').value.trim();
+    localStorage.setItem(SCRIPT_URL_KEY, scriptUrl);
+    updateConnDot();
+    $('toastSet').style.color='var(--teal)';
+    $('toastSet').textContent = '✓ ບັນທຶກລິ້ງແລ້ວ';
+  };
 
-  $('testUrlBtn').onclick = async ()=>{
-    if(!scriptUrl){
-      $('toastSet').style.color='var(--clay)';
-      $('toastSet').textContent = 'ກະລຸນາໃສ່ລິ້ງກ່ອນ';
-      return;
-    }
-    $('toastSet').style.color='var(--muted)';
-    $('toastSet').textContent = 'ກຳລັງທົດສອບ...';
-    try{
-      const data = await jsonp(scriptUrl + '?action=list');
-      if(data.status === 'ok'){
-        $('toastSet').style.color='var(--teal)';
-        $('toastSet').textContent = '✓ ເຊື່ອມຕໍ່ໄດ້ — ພົບ ' + data.entries.length + ' ກິດຈະກຳໃນ Sheet';
-      } else throw new Error(data.message || 'unknown error');
-    }catch(e){
-      $('toastSet').style.color='var(--clay)';
-      $('toastSet').textContent = 'ເຊື່ອມຕໍ່ບໍ່ສຳເລັດ: ' + e.message;
-    }
-  };
+  $('testUrlBtn').onclick = async ()=>{
+    if(!scriptUrl){
+      $('toastSet').style.color='var(--clay)';
+      $('toastSet').textContent = 'ກະລຸນາໃສ່ລິ້ງກ່ອນ';
+      return;
+    }
+    $('toastSet').style.color='var(--muted)';
+    $('toastSet').textContent = 'ກຳລັງທົດສອບ...';
+    try{
+      const data = await jsonp(scriptUrl + '?action=list');
+      if(data.status === 'ok'){
+        $('toastSet').style.color='var(--teal)';
+        $('toastSet').textContent = '✓ ເຊື່ອມຕໍ່ໄດ້ — ພົບ ' + data.entries.length + ' ກິດຈະກຳໃນ Sheet';
+      } else throw new Error(data.message || 'unknown error');
+    }catch(e){
+      $('toastSet').style.color='var(--clay)';
+      $('toastSet').textContent = 'ເຊື່ອມຕໍ່ບໍ່ສຳເລັດ: ' + e.message;
+    }
+  };
 
-  $('saveBtn').onclick = async ()=>{
-    if(!scriptUrl){
-      $('toast').style.color='var(--clay)';
-      $('toast').textContent = 'ກະລຸນາຕັ້ງຄ່າລິ້ງ Google Sheet ກ່ອນ (ແທັບ ⚙️ ຕັ້ງຄ່າ)';
-      return;
-    }
-    if(!$('fActivity').value.trim()){
-      $('toast').style.color='var(--clay)';
-      $('toast').textContent = 'ກະລຸນາໃສ່ຊື່ກິດຈະກຳ';
-      return;
-    }
-    if(!$('fFunder').value){
-      $('toast').style.color='var(--clay)';
-      $('toast').textContent = 'ກະລຸນາເລືອກຜູ້ໃຫ້ທຶນ';
-      return;
-    }
-    if(!$('fActivityDate').value){
-      $('toast').style.color='var(--clay)';
-      $('toast').textContent = 'ກະລຸນາໃສ່ວັນທີກິດຈະກຳ';
-      return;
-    }
-    if(!selDis){
-      $('toast').style.color='var(--clay)';
-      $('toast').textContent = 'ກະລຸນາລະບຸວ່າມີຜູ້ເຂົ້າຮ່ວມທີ່ມີຄວາມພິການບໍ';
-      return;
-    }
+  $('saveBtn').onclick = async ()=>{
+    if(!scriptUrl){
+      $('toast').style.color='var(--clay)';
+      $('toast').textContent = 'ກະລຸນາຕັ້ງຄ່າລິ້ງ Google Sheet ກ່ອນ (ແທັບ ⚙️ ຕັ້ງຄ່າ)';
+      return;
+    }
+    if(!$('fActivity').value.trim()){
+      $('toast').style.color='var(--clay)';
+      $('toast').textContent = 'ກະລຸນາໃສ່ຊື່ກິດຈະກຳ';
+      return;
+    }
+    if(!$('fFunder').value){
+      $('toast').style.color='var(--clay)';
+      $('toast').textContent = 'ກະລຸນາເລືອກຜູ້ໃຫ້ທຶນ';
+      return;
+    }
+    if(!$('fActivityDate').value){
+      $('toast').style.color='var(--clay)';
+      $('toast').textContent = 'ກະລຸນາໃສ່ວັນທີກິດຈະກຳ';
+      return;
+    }
+    if(!selDis){
+      $('toast').style.color='var(--clay)';
+      $('toast').textContent = 'ກະລຸນາລະບຸວ່າມີຜູ້ເຂົ້າຮ່ວມທີ່ມີຄວາມພິການບໍ';
+      return;
+    }
 
-    const entry = {
-      activityName: $('fActivity').value.trim(),
-      activityDate: $('fActivityDate').value,
-      funder: $('fFunder').value,
-      female: num('fFemale'), male: num('fMale'), otherGender: num('fOtherGender'),
-      ageU18: num('fAgeU18'), age18_35: num('fAge1835'), age35_60: num('fAge3560'), age60plus: num('fAge60plus'),
-      hasDisability: selDis,
-      disPhysical: selDis==='Yes'? num('fDisPhysical'):0,
-      disSensory: selDis==='Yes'? num('fDisSensory'):0,
-      disPsychosocial: selDis==='Yes'? num('fDisPsychosocial'):0,
-      disIntellectual: selDis==='Yes'? num('fDisIntellectual'):0,
-      summary: buildSummary()
-    };
+    const entry = {
+      activityName: $('fActivity').value.trim(),
+      activityDate: $('fActivityDate').value,
+      funder: $('fFunder').value,
+      female: num('fFemale'), male: num('fMale'), otherGender: num('fOtherGender'),
+      ageU18: num('fAgeU18'), age18_35: num('fAge1835'), age35_60: num('fAge3560'), age60plus: num('fAge60plus'),
+      hasDisability: selDis,
+      disPhysical: selDis==='Yes'? num('fDisPhysical'):0,
+      disSensory: selDis==='Yes'? num('fDisSensory'):0,
+      disPsychosocial: selDis==='Yes'? num('fDisPsychosocial'):0,
+      disIntellectual: selDis==='Yes'? num('fDisIntellectual'):0,
+      summary: buildSummary()
+    };
 
-    $('toast').style.color='var(--muted)';
-    $('toast').textContent = 'ກຳລັງບັນທຶກ...';
-    try{
-      const params = new URLSearchParams();
-      params.append('action', 'save');
-      Object.keys(entry).forEach(k => params.append(k, entry[k]));
-      const data = await jsonp(scriptUrl + '?' + params.toString());
-      if(data.status !== 'ok') throw new Error(data.message || 'save failed');
-      $('toast').style.color='var(--teal)';
-      $('toast').textContent = '✓ ບັນທຶກເຂົ້າ Google Sheet ແລ້ວ';
-      resetForm();
-    }catch(e){
-      $('toast').style.color='var(--clay)';
-      $('toast').textContent = 'ບັນທຶກບໍ່ສຳເລັດ: ' + e.message;
-    }
-    setTimeout(()=>{$('toast').textContent='';}, 3000);
-  };
+    $('toast').style.color='var(--muted)';
+    $('toast').textContent = 'ກຳລັງບັນທຶກ...';
+    try{
+      const params = new URLSearchParams();
+      params.append('action', 'save');
+      Object.keys(entry).forEach(k => params.append(k, entry[k]));
+      const data = await jsonp(scriptUrl + '?' + params.toString());
+      if(data.status !== 'ok') throw new Error(data.message || 'save failed');
+      $('toast').style.color='var(--teal)';
+      $('toast').textContent = '✓ ບັນທຶກເຂົ້າ Google Sheet ແລ້ວ';
+      resetForm();
+    }catch(e){
+      $('toast').style.color='var(--clay)';
+      $('toast').textContent = 'ບັນທຶກບໍ່ສຳເລັດ: ' + e.message;
+    }
+    setTimeout(()=>{$('toast').textContent='';}, 3000);
+  };
 
-  async function refreshFromSheet(){
-    if(!scriptUrl){ renderDashboard(); return; }
-    $('entryList').innerHTML = '<div class="empty">ກຳລັງໂຫຼດຂໍ້ມູນ...</div>';
-    try{
-      const data = await jsonp(scriptUrl + '?action=list');
-      entries = (data.entries || []).reverse();
-      $('totalBadge').textContent = entries.length + ' ກິດຈະກຳ';
-    }catch(e){ entries = []; }
-    renderDashboard();
-  }
-  $('refreshBtn').onclick = refreshFromSheet;
+  async function refreshFromSheet(){
+    if(!scriptUrl){ renderDashboard(); return; }
+    $('entryList').innerHTML = '<div class="empty">ກຳລັງໂຫຼດຂໍ້ມູນ...</div>';
+    try{
+      const data = await jsonp(scriptUrl + '?action=list');
+      entries = (data.entries || []).reverse();
+      $('totalBadge').textContent = entries.length + ' ກິດຈະກຳ';
+    }catch(e){ entries = []; }
+    renderDashboard();
+  }
+  $('refreshBtn').onclick = refreshFromSheet;
 
-  async function deleteEntry(id){
-    if(!scriptUrl) return;
-    try{
-      await jsonp(scriptUrl + '?action=delete&id=' + encodeURIComponent(id));
-      await refreshFromSheet();
-    }catch(e){}
-  }
+  async function deleteEntry(id){
+    if(!scriptUrl) return;
+    try{
+      await jsonp(scriptUrl + '?action=delete&id=' + encodeURIComponent(id));
+      await refreshFromSheet();
+    }catch(e){}
+  }
 
-  function renderDashboard(){
-    const activityCount = entries.length;
-    $('statActivities').textContent = activityCount;
+  function renderDashboard(){
+    const activityCount = entries.length;
+    $('statActivities').textContent = activityCount;
 
-    let totalP=0, totalF=0, totalM=0, totalO=0, totalU18=0, totalA1835=0, totalA3560=0, totalA60=0;
-    let totalDis=0, totalDp=0, totalDs=0, totalDpsy=0, totalDi=0;
-    const funderCounts = {};
+    let totalP=0, totalF=0, totalM=0, totalO=0, totalU18=0, totalA1835=0, totalA3560=0, totalA60=0;
+    let totalDis=0, totalDp=0, totalDs=0, totalDpsy=0, totalDi=0;
+    const funderCounts = {};
 
-    entries.forEach(e=>{
-      const f=e.female||0, m=e.male||0, o=e.otherGender||0;
-      totalF+=f; totalM+=m; totalO+=o; totalP += f+m+o;
-      totalU18 += e.ageU18||0; totalA1835 += e.age18_35||0; totalA3560 += e.age35_60||0; totalA60 += e.age60plus||0;
-      totalDp += e.disPhysical||0; totalDs += e.disSensory||0; totalDpsy += e.disPsychosocial||0; totalDi += e.disIntellectual||0;
-      if(e.funder) funderCounts[e.funder] = (funderCounts[e.funder]||0)+1;
-    });
-    totalDis = totalDp+totalDs+totalDpsy+totalDi;
+    entries.forEach(e=>{
+      const f=e.female||0, m=e.male||0, o=e.otherGender||0;
+      totalF+=f; totalM+=m; totalO+=o; totalP += f+m+o;
+      totalU18 += e.ageU18||0; totalA1835 += e.age18_35||0; totalA3560 += e.age35_60||0; totalA60 += e.age60plus||0;
+      totalDp += e.disPhysical||0; totalDs += e.disSensory||0; totalDpsy += e.disPsychosocial||0; totalDi += e.disIntellectual||0;
+      if(e.funder) funderCounts[e.funder] = (funderCounts[e.funder]||0)+1;
+    });
+    totalDis = totalDp+totalDs+totalDpsy+totalDi;
 
-    $('statTotal').textContent = totalP;
-    $('statDis').textContent = totalDis;
-    $('statFunders').textContent = Object.keys(funderCounts).length;
+    $('statTotal').textContent = totalP;
+    $('statDis').textContent = totalDis;
+    $('statFunders').textContent = Object.keys(funderCounts).length;
 
-    if(activityCount===0){
-      $('genderRibbon').innerHTML = '<div class="empty" style="width:100%">ຍັງບໍ່ມີຂໍ້ມູນ</div>';
-      $('genderLegend').innerHTML=''; $('ageRibbon').innerHTML=''; $('ageLegend').innerHTML='';
-      $('disBars').innerHTML = '<div class="empty">ຍັງບໍ່ມີຂໍ້ມູນ</div>';
-      $('funderBars').innerHTML = '<div class="empty">ຍັງບໍ່ມີຂໍ້ມູນ</div>';
-      $('entryList').innerHTML = '<div class="empty">ຍັງບໍ່ມີການບັນທຶກ</div>';
-      return;
-    }
+    if(activityCount===0){
+      $('genderRibbon').innerHTML = '<div class="empty" style="width:100%">ຍັງບໍ່ມີຂໍ້ມູນ</div>';
+      $('genderLegend').innerHTML=''; $('ageRibbon').innerHTML=''; $('ageLegend').innerHTML='';
+      $('disBars').innerHTML = '<div class="empty">ຍັງບໍ່ມີຂໍ້ມູນ</div>';
+      $('funderBars').innerHTML = '<div class="empty">ຍັງບໍ່ມີຂໍ້ມູນ</div>';
+      $('entryList').innerHTML = '<div class="empty">ຍັງບໍ່ມີການບັນທຶກ</div>';
+      return;
+    }
 
-    // gender ribbon
-    const gParts = [['ຍິງ',totalF,'var(--female)'],['ຊາຍ',totalM,'var(--male)'],['ອື່ນໆ',totalO,'var(--other)']];
-    $('genderRibbon').innerHTML = gParts.filter(g=>g[1]>0).map(([label,v,color])=>{
-      const pct = totalP? (v/totalP*100):0;
-      return `<div class="ribbon-seg" style="width:${pct}%;background:${color}">${pct>=8?Math.round(pct)+'%':''}</div>`;
-    }).join('');
-    $('genderLegend').innerHTML = gParts.map(([label,v,color])=>`<div class="legend-item"><span class="dot" style="background:${color}"></span>${label} (${v})</div>`).join('');
+    // gender ribbon
+    const gParts = [['ຍິງ',totalF,'var(--female)'],['ຊາຍ',totalM,'var(--male)'],['ອື່ນໆ',totalO,'var(--other)']];
+    $('genderRibbon').innerHTML = gParts.filter(g=>g[1]>0).map(([label,v,color])=>{
+      const pct = totalP? (v/totalP*100):0;
+      return `<div class="ribbon-seg" style="width:${pct}%;background:${color}">${pct>=8?Math.round(pct)+'%':''}</div>`;
+    }).join('');
+    $('genderLegend').innerHTML = gParts.map(([label,v,color])=>`<div class="legend-item"><span class="dot" style="background:${color}"></span>${label} (${v})</div>`).join('');
 
-    // age ribbon
-    const aParts = [['ຕ່ຳກວ່າ18',totalU18,'var(--c1)'],['18-35',totalA1835,'var(--c2)'],['35-60',totalA3560,'var(--c3)'],['60+',totalA60,'var(--c4)']];
-    const totalA = totalU18+totalA1835+totalA3560+totalA60;
-    $('ageRibbon').innerHTML = aParts.filter(a=>a[1]>0).map(([label,v,color])=>{
-      const pct = totalA? (v/totalA*100):0;
-      return `<div class="ribbon-seg" style="width:${pct}%;background:${color}">${pct>=8?Math.round(pct)+'%':''}</div>`;
-    }).join('');
-    $('ageLegend').innerHTML = aParts.map(([label,v,color])=>`<div class="legend-item"><span class="dot" style="background:${color}"></span>${label} (${v})</div>`).join('');
+    // age ribbon
+    const aParts = [['ຕ່ຳກວ່າ18',totalU18,'var(--c1)'],['18-35',totalA1835,'var(--c2)'],['35-60',totalA3560,'var(--c3)'],['60+',totalA60,'var(--c4)']];
+    const totalA = totalU18+totalA1835+totalA3560+totalA60;
+    $('ageRibbon').innerHTML = aParts.filter(a=>a[1]>0).map(([label,v,color])=>{
+      const pct = totalA? (v/totalA*100):0;
+      return `<div class="ribbon-seg" style="width:${pct}%;background:${color}">${pct>=8?Math.round(pct)+'%':''}</div>`;
+    }).join('');
+    $('ageLegend').innerHTML = aParts.map(([label,v,color])=>`<div class="legend-item"><span class="dot" style="background:${color}"></span>${label} (${v})</div>`).join('');
 
-    // disability bars
-    const dParts = [['ດ້ານຮ່າງກາຍ',totalDp],['ດ້ານປະສາດສຳພັດ',totalDs],['ດ້ານສັງຄົມຈິດຕະວິທະຍາ',totalDpsy],['ດ້ານສະໝອງ ແລະ ສະຕິປັນຍາ',totalDi]];
-    const dMax = Math.max(1, ...dParts.map(d=>d[1]));
-    $('disBars').innerHTML = totalDis===0 ? '<div class="empty">ບໍ່ມີຜູ້ເຂົ້າຮ່ວມທີ່ມີຄວາມພິການ</div>' :
-      dParts.map(([label,v])=>`
-        <div class="bar-row"><div class="bl">${label}</div>
-        <div class="bar-track"><div class="bar-fill" style="width:${(v/dMax*100)}%"></div></div>
-        <div class="bn">${v}</div></div>`).join('');
+    // disability bars
+    const dParts = [['ດ້ານຮ່າງກາຍ',totalDp],['ດ້ານປະສາດສຳພັດ',totalDs],['ດ້ານສັງຄົມຈິດຕະວິທະຍາ',totalDpsy],['ດ້ານສະໝອງ ແລະ ສະຕິປັນຍາ',totalDi]];
+    const dMax = Math.max(1, ...dParts.map(d=>d[1]));
+    $('disBars').innerHTML = totalDis===0 ? '<div class="empty">ບໍ່ມີຜູ້ເຂົ້າຮ່ວມທີ່ມີຄວາມພິການ</div>' :
+      dParts.map(([label,v])=>`
+        <div class="bar-row"><div class="bl">${label}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${(v/dMax*100)}%"></div></div>
+        <div class="bn">${v}</div></div>`).join('');
 
-    // funder bars
-    const fSorted = Object.entries(funderCounts).sort((a,b)=>b[1]-a[1]);
-    const fMax = fSorted.length? fSorted[0][1] : 1;
-    $('funderBars').innerHTML = fSorted.map(([k,v])=>`
-      <div class="bar-row"><div class="bl">${k}</div>
-      <div class="bar-track"><div class="bar-fill" style="width:${(v/fMax*100)}%;background:var(--teal)"></div></div>
-      <div class="bn">${v}</div></div>`).join('');
+    // funder bars
+    const fSorted = Object.entries(funderCounts).sort((a,b)=>b[1]-a[1]);
+    const fMax = fSorted.length? fSorted[0][1] : 1;
+    $('funderBars').innerHTML = fSorted.map(([k,v])=>`
+      <div class="bar-row"><div class="bl">${k}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${(v/fMax*100)}%;background:var(--teal)"></div></div>
+      <div class="bn">${v}</div></div>`).join('');
 
-    // yearly / monthly reports (grouped by activityDate) — full breakdown
-    function emptyPeriodStats(){
-      return {
-        activities: 0, total: 0,
-        female:0, male:0, otherGender:0,
-        ageU18:0, age18_35:0, age35_60:0, age60plus:0,
-        disPhysical:0, disSensory:0, disPsychosocial:0, disIntellectual:0,
-        funders: {}
-      };
-    }
-    const yearStats = {}, monthStats = {};
-    entries.forEach(e=>{
-      if(!e.activityDate) return;
-      const y = e.activityDate.slice(0,4);
-      const ym = e.activityDate.slice(0,7);
-      const p = (e.female||0)+(e.male||0)+(e.otherGender||0);
-      [[y,yearStats],[ym,monthStats]].forEach(([key,store])=>{
-        if(!key) return;
-        if(!store[key]) store[key] = emptyPeriodStats();
-        const s = store[key];
-        s.activities += 1;
-        s.total += p;
-        s.female += e.female||0; s.male += e.male||0; s.otherGender += e.otherGender||0;
-        s.ageU18 += e.ageU18||0; s.age18_35 += e.age18_35||0; s.age35_60 += e.age35_60||0; s.age60plus += e.age60plus||0;
-        s.disPhysical += e.disPhysical||0; s.disSensory += e.disSensory||0; s.disPsychosocial += e.disPsychosocial||0; s.disIntellectual += e.disIntellectual||0;
-        if(e.funder) s.funders[e.funder] = (s.funders[e.funder]||0)+1;
-      });
-    });
+    // yearly / monthly reports (grouped by activityDate) — full breakdown
+    function emptyPeriodStats(){
+      return {
+        activities: 0, total: 0,
+        female:0, male:0, otherGender:0,
+        ageU18:0, age18_35:0, age35_60:0, age60plus:0,
+        disPhysical:0, disSensory:0, disPsychosocial:0, disIntellectual:0,
+        funders: {}
+      };
+    }
+    const yearStats = {}, monthStats = {};
+    entries.forEach(e=>{
+      if(!e.activityDate) return;
+      const y = e.activityDate.slice(0,4);
+      const ym = e.activityDate.slice(0,7);
+      const p = (e.female||0)+(e.male||0)+(e.otherGender||0);
+      [[y,yearStats],[ym,monthStats]].forEach(([key,store])=>{
+        if(!key) return;
+        if(!store[key]) store[key] = emptyPeriodStats();
+        const s = store[key];
+        s.activities += 1;
+        s.total += p;
+        s.female += e.female||0; s.male += e.male||0; s.otherGender += e.otherGender||0;
+        s.ageU18 += e.ageU18||0; s.age18_35 += e.age18_35||0; s.age35_60 += e.age35_60||0; s.age60plus += e.age60plus||0;
+        s.disPhysical += e.disPhysical||0; s.disSensory += e.disSensory||0; s.disPsychosocial += e.disPsychosocial||0; s.disIntellectual += e.disIntellectual||0;
+        if(e.funder) s.funders[e.funder] = (s.funders[e.funder]||0)+1;
+      });
+    });
 
-    function renderOnePeriodCard(store, k){
-      const s = store[k];
-      if(!s) return '<div class="empty">ບໍ່ມີຂໍ້ມູນ</div>';
-      const disTotal = s.disPhysical+s.disSensory+s.disPsychosocial+s.disIntellectual;
-      const funderList = Object.entries(s.funders).sort((a,b)=>b[1]-a[1])
-        .map(([fn,cnt])=>`<div class="prow"><span>${fn}</span><b>${cnt}</b></div>`).join('');
-      return `
-      <div class="period-card">
-        <div class="phead"><div class="plabel">${k}</div><div class="ptotal">${s.activities} ກິດຈະກຳ · ${s.total} ຄົນ</div></div>
-        <div class="psection">ຕາມເພດ</div>
-        <div class="pgrid">
-          <div class="prow"><span>ຍິງ</span><b>${s.female}</b></div>
-          <div class="prow"><span>ຊາຍ</span><b>${s.male}</b></div>
-          <div class="prow"><span>ອື່ນໆ</span><b>${s.otherGender}</b></div>
-        </div>
-        <div class="psection">ຕາມອາຍຸ</div>
-        <div class="pgrid">
-          <div class="prow"><span>ຕ່ຳກວ່າ18</span><b>${s.ageU18}</b></div>
-          <div class="prow"><span>18-35</span><b>${s.age18_35}</b></div>
-          <div class="prow"><span>35-60</span><b>${s.age35_60}</b></div>
-          <div class="prow"><span>60+</span><b>${s.age60plus}</b></div>
-        </div>
-        <div class="psection">ຄວາມພິການ (ລວມ ${disTotal})</div>
-        <div class="pgrid">
-          <div class="prow"><span>ດ້ານຮ່າງກາຍ</span><b>${s.disPhysical}</b></div>
-          <div class="prow"><span>ດ້ານປະສາດສຳພັດ</span><b>${s.disSensory}</b></div>
-          <div class="prow"><span>ດ້ານສັງຄົມຈິດຕະວິທະຍາ</span><b>${s.disPsychosocial}</b></div>
-          <div class="prow"><span>ດ້ານສະໝອງແລະສະຕິປັນຍາ</span><b>${s.disIntellectual}</b></div>
-        </div>
-        ${funderList ? '<div class="psection">ຜູ້ໃຫ້ທຶນ</div><div class="pgrid">'+funderList+'</div>' : ''}
-      </div>`;
-    }
+    function renderOnePeriodCard(store, k){
+      const s = store[k];
+      if(!s) return '<div class="empty">ບໍ່ມີຂໍ້ມູນ</div>';
+      const disTotal = s.disPhysical+s.disSensory+s.disPsychosocial+s.disIntellectual;
+      const funderList = Object.entries(s.funders).sort((a,b)=>b[1]-a[1])
+        .map(([fn,cnt])=>`<div class="prow"><span>${fn}</span><b>${cnt}</b></div>`).join('');
+      return `
+      <div class="period-card">
+        <div class="phead"><div class="plabel">${k}</div><div class="ptotal">${s.activities} ກິດຈະກຳ · ${s.total} ຄົນ</div></div>
+        <div class="psection">ຕາມເພດ</div>
+        <div class="pgrid">
+          <div class="prow"><span>ຍິງ</span><b>${s.female}</b></div>
+          <div class="prow"><span>ຊາຍ</span><b>${s.male}</b></div>
+          <div class="prow"><span>ອື່ນໆ</span><b>${s.otherGender}</b></div>
+        </div>
+        <div class="psection">ຕາມອາຍຸ</div>
+        <div class="pgrid">
+          <div class="prow"><span>ຕ່ຳກວ່າ18</span><b>${s.ageU18}</b></div>
+          <div class="prow"><span>18-35</span><b>${s.age18_35}</b></div>
+          <div class="prow"><span>35-60</span><b>${s.age35_60}</b></div>
+          <div class="prow"><span>60+</span><b>${s.age60plus}</b></div>
+        </div>
+        <div class="psection">ຄວາມພິການ (ລວມ ${disTotal})</div>
+        <div class="pgrid">
+          <div class="prow"><span>ດ້ານຮ່າງກາຍ</span><b>${s.disPhysical}</b></div>
+          <div class="prow"><span>ດ້ານປະສາດສຳພັດ</span><b>${s.disSensory}</b></div>
+          <div class="prow"><span>ດ້ານສັງຄົມຈິດຕະວິທະຍາ</span><b>${s.disPsychosocial}</b></div>
+          <div class="prow"><span>ດ້ານສະໝອງແລະສະຕິປັນຍາ</span><b>${s.disIntellectual}</b></div>
+        </div>
+        ${funderList ? '<div class="psection">ຜູ້ໃຫ້ທຶນ</div><div class="pgrid">'+funderList+'</div>' : ''}
+      </div>`;
+    }
 
-    function setupPeriodSelector(store, selectEl, reportEl, labelFormatter){
-      const keys = Object.keys(store).sort((a,b)=>b.localeCompare(a)); // newest first
-      if(keys.length===0){
-        selectEl.innerHTML = '<option value="">-- ບໍ່ມີຂໍ້ມູນ --</option>';
-        reportEl.innerHTML = '<div class="empty">ຍັງບໍ່ມີຂໍ້ມູນວັນທີ</div>';
-        return;
-      }
-      const prevSelected = selectEl.value;
-      selectEl.innerHTML = keys.map(k=>`<option value="${k}">${labelFormatter?labelFormatter(k):k}</option>`).join('');
-      const toSelect = keys.includes(prevSelected) ? prevSelected : keys[0];
-      selectEl.value = toSelect;
-      reportEl.innerHTML = renderOnePeriodCard(store, toSelect);
-      selectEl.onchange = ()=>{ reportEl.innerHTML = renderOnePeriodCard(store, selectEl.value); };
-    }
+    function setupPeriodSelector(store, selectEl, reportEl, labelFormatter){
+      const keys = Object.keys(store).sort((a,b)=>b.localeCompare(a)); // newest first
+      if(keys.length===0){
+        selectEl.innerHTML = '<option value="">-- ບໍ່ມີຂໍ້ມູນ --</option>';
+        reportEl.innerHTML = '<div class="empty">ຍັງບໍ່ມີຂໍ້ມູນວັນທີ</div>';
+        return;
+      }
+      const prevSelected = selectEl.value;
+      selectEl.innerHTML = keys.map(k=>`<option value="${k}">${labelFormatter?labelFormatter(k):k}</option>`).join('');
+      const toSelect = keys.includes(prevSelected) ? prevSelected : keys[0];
+      selectEl.value = toSelect;
+      reportEl.innerHTML = renderOnePeriodCard(store, toSelect);
+      selectEl.onchange = ()=>{ reportEl.innerHTML = renderOnePeriodCard(store, selectEl.value); };
+    }
 
-    const monthNames = ['','ມັງກອນ','ກຸມພາ','ມີນາ','ເມສາ','ພຶດສະພາ','ມິຖຸນາ','ກໍລະກົດ','ສິງຫາ','ກັນຍາ','ຕຸລາ','ພະຈິກ','ທັນວາ'];
-    setupPeriodSelector(yearStats, $('yearSelect'), $('yearReport'));
-    setupPeriodSelector(monthStats, $('monthSelect'), $('monthReport'), (k)=>{
-      const parts = k.split('-');
-      const mIdx = parseInt(parts[1],10);
-      return (monthNames[mIdx]||parts[1]) + ' ' + parts[0];
-    });
+    const monthNames = ['','ມັງກອນ','ກຸມພາ','ມີນາ','ເມສາ','ພຶດສະພາ','ມິຖຸນາ','ກໍລະກົດ','ສິງຫາ','ກັນຍາ','ຕຸລາ','ພະຈິກ','ທັນວາ'];
+    setupPeriodSelector(yearStats, $('yearSelect'), $('yearReport'));
+    setupPeriodSelector(monthStats, $('monthSelect'), $('monthReport'), (k)=>{
+      const parts = k.split('-');
+      const mIdx = parseInt(parts[1],10);
+      return (monthNames[mIdx]||parts[1]) + ' ' + parts[0];
+    });
 
-    // entry list
-    $('entryList').innerHTML = entries.map(e=>`
-      <div class="entry-card">
-        <div class="head">
-          <div>
-            <div class="name">${e.activityName}</div>
-            <div class="funder-tag">${e.funder}</div>
-            ${e.activityDate? '<div class="funder-tag" style="background:var(--teal);margin-left:6px;">'+e.activityDate+'</div>' : ''}
-          </div>
-          <button class="del" data-id="${e.id}">ລຶບ</button>
-        </div>
-        <div class="summary">${e.summary}</div>
-      </div>`).join('');
-    document.querySelectorAll('.del').forEach(b=>{ b.onclick = ()=>deleteEntry(b.dataset.id); });
-  }
+    // entry list
+    $('entryList').innerHTML = entries.map(e=>`
+      <div class="entry-card">
+        <div class="head">
+          <div>
+            <div class="name">${e.activityName}</div>
+            <div class="funder-tag">${e.funder}</div>
+            ${e.activityDate? '<div class="funder-tag" style="background:var(--teal);margin-left:6px;">'+e.activityDate+'</div>' : ''}
+          </div>
+          <button class="del" data-id="${e.id}">ລຶບ</button>
+        </div>
+        <div class="summary">${e.summary}</div>
+      </div>`).join('');
+    document.querySelectorAll('.del').forEach(b=>{ b.onclick = ()=>deleteEntry(b.dataset.id); });
+  }
 
-  $('exportBtn').onclick = ()=>{
-    if(entries.length===0) return;
-    const headers = ['ຊື່ກິດຈະກຳ','ວັນທີ','ຜູ້ໃຫ້ທຶນ','ຍິງ','ຊາຍ','ອື່ນໆ','ອາຍຸ<18','18-35','35-60','60+','ມີຄວາມພິການ','ດ້ານຮ່າງກາຍ','ດ້ານປະສາດສຳພັດ','ດ້ານສັງຄົມຈິດຕະວິທະຍາ','ດ້ານສະໝອງແລະສະຕິປັນຍາ','ສະຫຼຸບ'];
-    const rows = entries.map(e=>[e.activityName,e.activityDate,e.funder,e.female,e.male,e.otherGender,e.ageU18,e.age18_35,e.age35_60,e.age60plus,e.hasDisability,e.disPhysical,e.disSensory,e.disPsychosocial,e.disIntellectual,e.summary]);
-    let csv = '\uFEFF' + headers.join(',') + '\n' + rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
-    const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'gedsi_activities.csv'; a.click();
-    URL.revokeObjectURL(url);
-  };
+  $('exportBtn').onclick = ()=>{
+    if(entries.length===0) return;
+    const headers = ['ຊື່ກິດຈະກຳ','ວັນທີ','ຜູ້ໃຫ້ທຶນ','ຍິງ','ຊາຍ','ອື່ນໆ','ອາຍຸ<18','18-35','35-60','60+','ມີຄວາມພິການ','ດ້ານຮ່າງກາຍ','ດ້ານປະສາດສຳພັດ','ດ້ານສັງຄົມຈິດຕະວິທະຍາ','ດ້ານສະໝອງແລະສະຕິປັນຍາ','ສະຫຼຸບ'];
+    const rows = entries.map(e=>[e.activityName,e.activityDate,e.funder,e.female,e.male,e.otherGender,e.ageU18,e.age18_35,e.age35_60,e.age60plus,e.hasDisability,e.disPhysical,e.disSensory,e.disPsychosocial,e.disIntellectual,e.summary]);
+    let csv = '\uFEFF' + headers.join(',') + '\n' + rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'gedsi_activities.csv'; a.click();
+    URL.revokeObjectURL(url);
+  };
 
-  renderDashboard();
+  renderDashboard();
 })();
 </script>
 </body>

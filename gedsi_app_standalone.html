@@ -197,9 +197,15 @@
     <div class="bars" id="funderBars"></div>
 
     <div class="section-title">ລາຍງານປະຈຳປີ</div>
+    <div class="field" style="max-width:220px;">
+      <select id="yearSelect"></select>
+    </div>
     <div class="entry-list" id="yearReport"></div>
 
     <div class="section-title">ລາຍງານປະຈຳເດືອນ</div>
+    <div class="field" style="max-width:220px;">
+      <select id="monthSelect"></select>
+    </div>
     <div class="entry-list" id="monthReport"></div>
 
     <div class="section-title">ລາຍການກິດຈະກຳ</div>
@@ -545,44 +551,61 @@
       });
     });
 
-    function renderPeriodCards(store){
-      const keys = Object.keys(store).sort((a,b)=>b.localeCompare(a)); // newest first
-      if(keys.length===0) return '<div class="empty">ຍັງບໍ່ມີຂໍ້ມູນວັນທີ</div>';
-      return keys.map(k=>{
-        const s = store[k];
-        const disTotal = s.disPhysical+s.disSensory+s.disPsychosocial+s.disIntellectual;
-        const funderList = Object.entries(s.funders).sort((a,b)=>b[1]-a[1])
-          .map(([fn,cnt])=>`<div class="prow"><span>${fn}</span><b>${cnt}</b></div>`).join('');
-        return `
-        <div class="period-card">
-          <div class="phead"><div class="plabel">${k}</div><div class="ptotal">${s.activities} ກິດຈະກຳ · ${s.total} ຄົນ</div></div>
-          <div class="psection">ຕາມເພດ</div>
-          <div class="pgrid">
-            <div class="prow"><span>ຍິງ</span><b>${s.female}</b></div>
-            <div class="prow"><span>ຊາຍ</span><b>${s.male}</b></div>
-            <div class="prow"><span>ອື່ນໆ</span><b>${s.otherGender}</b></div>
-          </div>
-          <div class="psection">ຕາມອາຍຸ</div>
-          <div class="pgrid">
-            <div class="prow"><span>ຕ່ຳກວ່າ18</span><b>${s.ageU18}</b></div>
-            <div class="prow"><span>18-35</span><b>${s.age18_35}</b></div>
-            <div class="prow"><span>35-60</span><b>${s.age35_60}</b></div>
-            <div class="prow"><span>60+</span><b>${s.age60plus}</b></div>
-          </div>
-          <div class="psection">ຄວາມພິການ (ລວມ ${disTotal})</div>
-          <div class="pgrid">
-            <div class="prow"><span>ດ້ານຮ່າງກາຍ</span><b>${s.disPhysical}</b></div>
-            <div class="prow"><span>ດ້ານປະສາດສຳພັດ</span><b>${s.disSensory}</b></div>
-            <div class="prow"><span>ດ້ານສັງຄົມຈິດຕະວິທະຍາ</span><b>${s.disPsychosocial}</b></div>
-            <div class="prow"><span>ດ້ານສະໝອງແລະສະຕິປັນຍາ</span><b>${s.disIntellectual}</b></div>
-          </div>
-          ${funderList ? '<div class="psection">ຜູ້ໃຫ້ທຶນ</div><div class="pgrid">'+funderList+'</div>' : ''}
-        </div>`;
-      }).join('');
+    function renderOnePeriodCard(store, k){
+      const s = store[k];
+      if(!s) return '<div class="empty">ບໍ່ມີຂໍ້ມູນ</div>';
+      const disTotal = s.disPhysical+s.disSensory+s.disPsychosocial+s.disIntellectual;
+      const funderList = Object.entries(s.funders).sort((a,b)=>b[1]-a[1])
+        .map(([fn,cnt])=>`<div class="prow"><span>${fn}</span><b>${cnt}</b></div>`).join('');
+      return `
+      <div class="period-card">
+        <div class="phead"><div class="plabel">${k}</div><div class="ptotal">${s.activities} ກິດຈະກຳ · ${s.total} ຄົນ</div></div>
+        <div class="psection">ຕາມເພດ</div>
+        <div class="pgrid">
+          <div class="prow"><span>ຍິງ</span><b>${s.female}</b></div>
+          <div class="prow"><span>ຊາຍ</span><b>${s.male}</b></div>
+          <div class="prow"><span>ອື່ນໆ</span><b>${s.otherGender}</b></div>
+        </div>
+        <div class="psection">ຕາມອາຍຸ</div>
+        <div class="pgrid">
+          <div class="prow"><span>ຕ່ຳກວ່າ18</span><b>${s.ageU18}</b></div>
+          <div class="prow"><span>18-35</span><b>${s.age18_35}</b></div>
+          <div class="prow"><span>35-60</span><b>${s.age35_60}</b></div>
+          <div class="prow"><span>60+</span><b>${s.age60plus}</b></div>
+        </div>
+        <div class="psection">ຄວາມພິການ (ລວມ ${disTotal})</div>
+        <div class="pgrid">
+          <div class="prow"><span>ດ້ານຮ່າງກາຍ</span><b>${s.disPhysical}</b></div>
+          <div class="prow"><span>ດ້ານປະສາດສຳພັດ</span><b>${s.disSensory}</b></div>
+          <div class="prow"><span>ດ້ານສັງຄົມຈິດຕະວິທະຍາ</span><b>${s.disPsychosocial}</b></div>
+          <div class="prow"><span>ດ້ານສະໝອງແລະສະຕິປັນຍາ</span><b>${s.disIntellectual}</b></div>
+        </div>
+        ${funderList ? '<div class="psection">ຜູ້ໃຫ້ທຶນ</div><div class="pgrid">'+funderList+'</div>' : ''}
+      </div>`;
     }
 
-    $('yearReport').innerHTML = renderPeriodCards(yearStats);
-    $('monthReport').innerHTML = renderPeriodCards(monthStats);
+    function setupPeriodSelector(store, selectEl, reportEl, labelFormatter){
+      const keys = Object.keys(store).sort((a,b)=>b.localeCompare(a)); // newest first
+      if(keys.length===0){
+        selectEl.innerHTML = '<option value="">-- ບໍ່ມີຂໍ້ມູນ --</option>';
+        reportEl.innerHTML = '<div class="empty">ຍັງບໍ່ມີຂໍ້ມູນວັນທີ</div>';
+        return;
+      }
+      const prevSelected = selectEl.value;
+      selectEl.innerHTML = keys.map(k=>`<option value="${k}">${labelFormatter?labelFormatter(k):k}</option>`).join('');
+      const toSelect = keys.includes(prevSelected) ? prevSelected : keys[0];
+      selectEl.value = toSelect;
+      reportEl.innerHTML = renderOnePeriodCard(store, toSelect);
+      selectEl.onchange = ()=>{ reportEl.innerHTML = renderOnePeriodCard(store, selectEl.value); };
+    }
+
+    const monthNames = ['','ມັງກອນ','ກຸມພາ','ມີນາ','ເມສາ','ພຶດສະພາ','ມິຖຸນາ','ກໍລະກົດ','ສິງຫາ','ກັນຍາ','ຕຸລາ','ພະຈິກ','ທັນວາ'];
+    setupPeriodSelector(yearStats, $('yearSelect'), $('yearReport'));
+    setupPeriodSelector(monthStats, $('monthSelect'), $('monthReport'), (k)=>{
+      const parts = k.split('-');
+      const mIdx = parseInt(parts[1],10);
+      return (monthNames[mIdx]||parts[1]) + ' ' + parts[0];
+    });
 
     // entry list
     $('entryList').innerHTML = entries.map(e=>`

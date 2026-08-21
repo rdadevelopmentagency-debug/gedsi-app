@@ -72,8 +72,6 @@
   .entry-card .funder-tag{display:inline-block;background:var(--ink);color:#F6F3EC;font-size:11px;font-weight:700;padding:2px 9px;border-radius:12px;margin-top:4px;font-family:'Space Grotesk',sans-serif;}
   .entry-card .summary{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.7;}
   .del{color:var(--clay);cursor:pointer;font-size:12px;font-weight:700;background:none;border:none;font-family:inherit;flex-shrink:0;}
-  .setup-banner{background:#FBEFD9;border:1.5px solid var(--gold);border-radius:10px;padding:16px 18px;margin-bottom:18px;font-size:13.5px;line-height:1.7;}
-  .setup-banner code{background:#fff;padding:2px 6px;border-radius:4px;font-size:12px;}
   .conn-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;}
   .preview-box{background:#F0EEE3;border:1.5px dashed var(--line);border-radius:10px;padding:14px 16px;font-size:13px;line-height:1.8;margin-top:16px;color:var(--ink);}
   .period-card{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#FBFAF6;}
@@ -512,7 +510,7 @@
       <div class="bar-track"><div class="bar-fill" style="width:${(v/fMax*100)}%;background:var(--teal)"></div></div>
       <div class="bn">${v}</div></div>`).join('');
 
-    // yearly / monthly reports (grouped by activityDate) — full breakdown
+    // yearly / monthly reports
     function emptyPeriodStats(){
       return {
         activities: 0, total: 0,
@@ -575,7 +573,7 @@
     }
 
     function setupPeriodSelector(store, selectEl, reportEl, labelFormatter){
-      const keys = Object.keys(store).sort((a,b)=>b.localeCompare(a)); // newest first
+      const keys = Object.keys(store).sort((a,b)=>b.localeCompare(a));
       if(keys.length===0){
         selectEl.innerHTML = '<option value="">-- ບໍ່ມີຂໍ້ມູນ --</option>';
         reportEl.innerHTML = '<div class="empty">ຍັງບໍ່ມີຂໍ້ມູນວັນທີ</div>';

@@ -301,6 +301,31 @@
   }
   $('clearBtn').onclick = resetForm;
 
+  function jsonp(url){
+    return new Promise((resolve, reject)=>{
+      const cbName = 'gedsi_cb_' + Date.now() + '_' + Math.floor(Math.random()*100000);
+      const script = document.createElement('script');
+      let done = false;
+      window[cbName] = (data)=>{
+        done = true;
+        resolve(data);
+        cleanup();
+      };
+      function cleanup(){
+        delete window[cbName];
+        if(script.parentNode) script.parentNode.removeChild(script);
+      }
+      script.onerror = ()=>{
+        if(!done){ reject(new Error('ໂຫຼດຂໍ້ມູນບໍ່ສຳເລັດ (ກວດ URL ຄືນ)')); cleanup(); }
+      };
+      script.src = url + (url.indexOf('?')>-1 ? '&' : '?') + 'callback=' + cbName;
+      document.body.appendChild(script);
+      setTimeout(()=>{
+        if(!done){ reject(new Error('ໝົດເວລາລໍຖ້າ (timeout)')); cleanup(); }
+      }, 12000);
+    });
+  }
+
   $('saveUrlBtn').onclick = ()=>{
     scriptUrl = $('fScriptUrl').value.trim();
     localStorage.setItem(SCRIPT_URL_KEY, scriptUrl);
@@ -318,8 +343,7 @@
     $('toastSet').style.color='var(--muted)';
     $('toastSet').textContent = 'ກຳລັງທົດສອບ...';
     try{
-      const res = await fetch(scriptUrl + '?action=list');
-      const data = await res.json();
+      const data = await jsonp(scriptUrl + '?action=list');
       if(data.status === 'ok'){
         $('toastSet').style.color='var(--teal)';
         $('toastSet').textContent = '✓ ເຊື່ອມຕໍ່ໄດ້ — ພົບ ' + data.entries.length + ' ກິດຈະກຳໃນ Sheet';
@@ -369,13 +393,9 @@
     $('toast').textContent = 'ກຳລັງບັນທຶກ...';
     try{
       const params = new URLSearchParams();
+      params.append('action', 'save');
       Object.keys(entry).forEach(k => params.append(k, entry[k]));
-      const res = await fetch(scriptUrl, {
-        method:'POST',
-        headers:{'Content-Type':'application/x-www-form-urlencoded'},
-        body: params.toString()
-      });
-      const data = await res.json();
+      const data = await jsonp(scriptUrl + '?' + params.toString());
       if(data.status !== 'ok') throw new Error(data.message || 'save failed');
       $('toast').style.color='var(--teal)';
       $('toast').textContent = '✓ ບັນທຶກເຂົ້າ Google Sheet ແລ້ວ';
@@ -391,8 +411,7 @@
     if(!scriptUrl){ renderDashboard(); return; }
     $('entryList').innerHTML = '<div class="empty">ກຳລັງໂຫຼດຂໍ້ມູນ...</div>';
     try{
-      const res = await fetch(scriptUrl + '?action=list');
-      const data = await res.json();
+      const data = await jsonp(scriptUrl + '?action=list');
       entries = (data.entries || []).reverse();
       $('totalBadge').textContent = entries.length + ' ກິດຈະກຳ';
     }catch(e){ entries = []; }
@@ -403,7 +422,7 @@
   async function deleteEntry(id){
     if(!scriptUrl) return;
     try{
-      await fetch(scriptUrl + '?action=delete&id=' + encodeURIComponent(id));
+      await jsonp(scriptUrl + '?action=delete&id=' + encodeURIComponent(id));
       await refreshFromSheet();
     }catch(e){}
   }

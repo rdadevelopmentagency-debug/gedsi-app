@@ -76,6 +76,15 @@
   .setup-banner code{background:#fff;padding:2px 6px;border-radius:4px;font-size:12px;}
   .conn-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;}
   .preview-box{background:#F0EEE3;border:1.5px dashed var(--line);border-radius:10px;padding:14px 16px;font-size:13px;line-height:1.8;margin-top:16px;color:var(--ink);}
+  .period-card{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#FBFAF6;}
+  .period-card .phead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
+  .period-card .plabel{font-weight:700;font-size:14.5px;font-family:'Space Grotesk',sans-serif;}
+  .period-card .ptotal{font-size:12px;color:var(--muted);font-weight:600;}
+  .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:4px 18px;font-size:12.5px;}
+  @media(max-width:520px){.pgrid{grid-template-columns:1fr;}}
+  .pgrid .prow{display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:3px 0;}
+  .pgrid .prow b{font-family:'Space Grotesk',sans-serif;}
+  .psection{font-size:10.5px;font-weight:700;text-transform:uppercase;color:var(--muted);margin:8px 0 3px;letter-spacing:.4px;}
 </style>
 </head>
 <body>
@@ -95,13 +104,14 @@
   </div>
 
   <div class="panel" id="panelEntry">
-    <div class="setup-banner" id="noUrlBanner">
-      ⚠️ ຍັງບໍ່ໄດ້ຕັ້ງຄ່າ Google Sheet — ໄປແທັບ <b>⚙️ ຕັ້ງຄ່າ</b> ເພື່ອວາງລິ້ງ Apps Script ກ່ອນເລີ່ມໃຊ້ງານ
-    </div>
-
     <div class="field">
       <label>1. ຊື່ກິດຈະກຳ</label>
       <input type="text" id="fActivity" placeholder="ເຊັ່ນ: ການຝຶກອົບຮົມ GEDSI ບ້ານ...">
+    </div>
+
+    <div class="field">
+      <label>ວັນທີກິດຈະກຳ</label>
+      <input type="date" id="fActivityDate">
     </div>
 
     <div class="field">
@@ -186,6 +196,12 @@
     <div class="section-title">ຜູ້ໃຫ້ທຶນ</div>
     <div class="bars" id="funderBars"></div>
 
+    <div class="section-title">ລາຍງານປະຈຳປີ</div>
+    <div class="entry-list" id="yearReport"></div>
+
+    <div class="section-title">ລາຍງານປະຈຳເດືອນ</div>
+    <div class="entry-list" id="monthReport"></div>
+
     <div class="section-title">ລາຍການກິດຈະກຳ</div>
     <div class="entry-list" id="entryList"></div>
   </div>
@@ -194,7 +210,7 @@
     <div class="field">
       <label><span class="conn-dot" id="connDot" style="background:var(--clay)"></span>Google Apps Script Web App URL</label>
       <input type="text" id="fScriptUrl" placeholder="https://script.google.com/macros/s/XXXXXXXX/exec">
-      <div class="hint">ຄ່ານີ້ຖືກຈື່ໄວ້ໃນ browser ນີ້ເທົ່ານັ້ນ (localStorage) — ຖ້າເປີດຈາກເຄື່ອງ/browser ອື່ນ ຕ້ອງວາງລິ້ງນີ້ຄືນໃໝ່ ຄັ້ງດຽວ.</div>
+      <div class="hint">ລິ້ງນີ້ຖືກຝັງໄວ້ໃນແອັບແລ້ວໂດຍຄ່າເລີ່ມຕົ້ນ — ບໍ່ຈຳເປັນຕ້ອງຕັ້ງຄ່າອີກ. ໃຊ້ຊ່ອງນີ້ພຽງແຕ່ຖ້າຕ້ອງການປ່ຽນໄປໃຊ້ Google Sheet ອື່ນ (ຈະຈື່ໄວ້ສະເພາະ browser ນີ້).</div>
     </div>
     <div class="btn-row">
       <button class="btn" id="saveUrlBtn">💾 ບັນທຶກລິ້ງ</button>
@@ -217,18 +233,20 @@
 <script>
 (function(){
   const SCRIPT_URL_KEY = 'gedsi_activity_script_url';
+  const DEFAULT_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwdBHJI4s53I6E4YVEi7LhFat5e8pmXRfBG-SpCcZbtiQ1nBV7taS5FBFyXd3I_SBuw6g/exec';
   let entries = [];
   let selDis = null;
-  let scriptUrl = localStorage.getItem(SCRIPT_URL_KEY) || '';
+  let scriptUrl = localStorage.getItem(SCRIPT_URL_KEY) || DEFAULT_SCRIPT_URL;
 
   const $ = id => document.getElementById(id);
   const num = id => parseInt($(id).value) || 0;
+  function todayStr(){ return new Date().toISOString().slice(0,10); }
+  $('fActivityDate').value = todayStr();
 
   $('fScriptUrl').value = scriptUrl;
   updateConnDot();
   function updateConnDot(){
     $('connDot').style.background = scriptUrl ? 'var(--teal)' : 'var(--clay)';
-    $('noUrlBanner').classList.toggle('hidden', !!scriptUrl);
   }
 
   $('tabEntryBtn').onclick = () => switchTab('entry');
@@ -253,7 +271,7 @@
     };
   });
 
-  ['fActivity','fFunder','fFemale','fMale','fOtherGender','fAgeU18','fAge1835','fAge3560','fAge60plus',
+  ['fActivity','fActivityDate','fFunder','fFemale','fMale','fOtherGender','fAgeU18','fAge1835','fAge3560','fAge60plus',
    'fDisPhysical','fDisSensory','fDisPsychosocial','fDisIntellectual'].forEach(id=>{
     $(id).addEventListener('input', updatePreview);
     $(id).addEventListener('change', updatePreview);
@@ -265,6 +283,7 @@
     const u18 = num('fAgeU18'), a1835 = num('fAge1835'), a3560 = num('fAge3560'), a60 = num('fAge60plus');
     const activity = $('fActivity').value.trim() || 'ກິດຈະກຳນີ້';
     const funder = $('fFunder').value;
+    const adate = $('fActivityDate').value;
 
     let disText = 'ບໍ່ມີຜູ້ເຂົ້າຮ່ວມທີ່ມີຄວາມພິການ';
     let disTotal = 0;
@@ -279,7 +298,7 @@
       disText = 'ມີຜູ້ເຂົ້າຮ່ວມທີ່ມີຄວາມພິການທັງໝົດ ' + disTotal + ' ຄົນ' + (parts.length? ' (' + parts.join(', ') + ')' : '');
     }
 
-    return `${activity}${funder? ' (ຜູ້ໃຫ້ທຶນ: '+funder+')':''} — ຜູ້ເຂົ້າຮ່ວມທັງໝົດ ${total} ຄົນ. ` +
+    return `${activity}${adate? ' ('+adate+')':''}${funder? ' — ຜູ້ໃຫ້ທຶນ: '+funder:''} — ຜູ້ເຂົ້າຮ່ວມທັງໝົດ ${total} ຄົນ. ` +
       `ຕາມເພດ: ຍິງ ${female}, ຊາຍ ${male}, ອື່ນໆ ${other}. ` +
       `ຕາມອາຍຸ: ຕ່ຳກວ່າ18 = ${u18}, 18-35 = ${a1835}, 35-60 = ${a3560}, ຫຼາຍກວ່າ60 = ${a60}. ` +
       disText + '.';
@@ -291,7 +310,7 @@
   updatePreview();
 
   function resetForm(){
-    $('fActivity').value=''; $('fFunder').value='';
+    $('fActivity').value=''; $('fFunder').value=''; $('fActivityDate').value = todayStr();
     ['fFemale','fMale','fOtherGender','fAgeU18','fAge1835','fAge3560','fAge60plus',
      'fDisPhysical','fDisSensory','fDisPsychosocial','fDisIntellectual'].forEach(id=>{ $(id).value = 0; });
     selDis = null;
@@ -370,6 +389,11 @@
       $('toast').textContent = 'ກະລຸນາເລືອກຜູ້ໃຫ້ທຶນ';
       return;
     }
+    if(!$('fActivityDate').value){
+      $('toast').style.color='var(--clay)';
+      $('toast').textContent = 'ກະລຸນາໃສ່ວັນທີກິດຈະກຳ';
+      return;
+    }
     if(!selDis){
       $('toast').style.color='var(--clay)';
       $('toast').textContent = 'ກະລຸນາລະບຸວ່າມີຜູ້ເຂົ້າຮ່ວມທີ່ມີຄວາມພິການບໍ';
@@ -378,6 +402,7 @@
 
     const entry = {
       activityName: $('fActivity').value.trim(),
+      activityDate: $('fActivityDate').value,
       funder: $('fFunder').value,
       female: num('fFemale'), male: num('fMale'), otherGender: num('fOtherGender'),
       ageU18: num('fAgeU18'), age18_35: num('fAge1835'), age35_60: num('fAge3560'), age60plus: num('fAge60plus'),
@@ -491,6 +516,74 @@
       <div class="bar-track"><div class="bar-fill" style="width:${(v/fMax*100)}%;background:var(--teal)"></div></div>
       <div class="bn">${v}</div></div>`).join('');
 
+    // yearly / monthly reports (grouped by activityDate) — full breakdown
+    function emptyPeriodStats(){
+      return {
+        activities: 0, total: 0,
+        female:0, male:0, otherGender:0,
+        ageU18:0, age18_35:0, age35_60:0, age60plus:0,
+        disPhysical:0, disSensory:0, disPsychosocial:0, disIntellectual:0,
+        funders: {}
+      };
+    }
+    const yearStats = {}, monthStats = {};
+    entries.forEach(e=>{
+      if(!e.activityDate) return;
+      const y = e.activityDate.slice(0,4);
+      const ym = e.activityDate.slice(0,7);
+      const p = (e.female||0)+(e.male||0)+(e.otherGender||0);
+      [[y,yearStats],[ym,monthStats]].forEach(([key,store])=>{
+        if(!key) return;
+        if(!store[key]) store[key] = emptyPeriodStats();
+        const s = store[key];
+        s.activities += 1;
+        s.total += p;
+        s.female += e.female||0; s.male += e.male||0; s.otherGender += e.otherGender||0;
+        s.ageU18 += e.ageU18||0; s.age18_35 += e.age18_35||0; s.age35_60 += e.age35_60||0; s.age60plus += e.age60plus||0;
+        s.disPhysical += e.disPhysical||0; s.disSensory += e.disSensory||0; s.disPsychosocial += e.disPsychosocial||0; s.disIntellectual += e.disIntellectual||0;
+        if(e.funder) s.funders[e.funder] = (s.funders[e.funder]||0)+1;
+      });
+    });
+
+    function renderPeriodCards(store){
+      const keys = Object.keys(store).sort((a,b)=>b.localeCompare(a)); // newest first
+      if(keys.length===0) return '<div class="empty">ຍັງບໍ່ມີຂໍ້ມູນວັນທີ</div>';
+      return keys.map(k=>{
+        const s = store[k];
+        const disTotal = s.disPhysical+s.disSensory+s.disPsychosocial+s.disIntellectual;
+        const funderList = Object.entries(s.funders).sort((a,b)=>b[1]-a[1])
+          .map(([fn,cnt])=>`<div class="prow"><span>${fn}</span><b>${cnt}</b></div>`).join('');
+        return `
+        <div class="period-card">
+          <div class="phead"><div class="plabel">${k}</div><div class="ptotal">${s.activities} ກິດຈະກຳ · ${s.total} ຄົນ</div></div>
+          <div class="psection">ຕາມເພດ</div>
+          <div class="pgrid">
+            <div class="prow"><span>ຍິງ</span><b>${s.female}</b></div>
+            <div class="prow"><span>ຊາຍ</span><b>${s.male}</b></div>
+            <div class="prow"><span>ອື່ນໆ</span><b>${s.otherGender}</b></div>
+          </div>
+          <div class="psection">ຕາມອາຍຸ</div>
+          <div class="pgrid">
+            <div class="prow"><span>ຕ່ຳກວ່າ18</span><b>${s.ageU18}</b></div>
+            <div class="prow"><span>18-35</span><b>${s.age18_35}</b></div>
+            <div class="prow"><span>35-60</span><b>${s.age35_60}</b></div>
+            <div class="prow"><span>60+</span><b>${s.age60plus}</b></div>
+          </div>
+          <div class="psection">ຄວາມພິການ (ລວມ ${disTotal})</div>
+          <div class="pgrid">
+            <div class="prow"><span>ດ້ານຮ່າງກາຍ</span><b>${s.disPhysical}</b></div>
+            <div class="prow"><span>ດ້ານປະສາດສຳພັດ</span><b>${s.disSensory}</b></div>
+            <div class="prow"><span>ດ້ານສັງຄົມຈິດຕະວິທະຍາ</span><b>${s.disPsychosocial}</b></div>
+            <div class="prow"><span>ດ້ານສະໝອງແລະສະຕິປັນຍາ</span><b>${s.disIntellectual}</b></div>
+          </div>
+          ${funderList ? '<div class="psection">ຜູ້ໃຫ້ທຶນ</div><div class="pgrid">'+funderList+'</div>' : ''}
+        </div>`;
+      }).join('');
+    }
+
+    $('yearReport').innerHTML = renderPeriodCards(yearStats);
+    $('monthReport').innerHTML = renderPeriodCards(monthStats);
+
     // entry list
     $('entryList').innerHTML = entries.map(e=>`
       <div class="entry-card">
@@ -498,6 +591,7 @@
           <div>
             <div class="name">${e.activityName}</div>
             <div class="funder-tag">${e.funder}</div>
+            ${e.activityDate? '<div class="funder-tag" style="background:var(--teal);margin-left:6px;">'+e.activityDate+'</div>' : ''}
           </div>
           <button class="del" data-id="${e.id}">ລຶບ</button>
         </div>
@@ -508,8 +602,8 @@
 
   $('exportBtn').onclick = ()=>{
     if(entries.length===0) return;
-    const headers = ['ຊື່ກິດຈະກຳ','ຜູ້ໃຫ້ທຶນ','ຍິງ','ຊາຍ','ອື່ນໆ','ອາຍຸ<18','18-35','35-60','60+','ມີຄວາມພິການ','ດ້ານຮ່າງກາຍ','ດ້ານປະສາດສຳພັດ','ດ້ານສັງຄົມຈິດຕະວິທະຍາ','ດ້ານສະໝອງແລະສະຕິປັນຍາ','ສະຫຼຸບ'];
-    const rows = entries.map(e=>[e.activityName,e.funder,e.female,e.male,e.otherGender,e.ageU18,e.age18_35,e.age35_60,e.age60plus,e.hasDisability,e.disPhysical,e.disSensory,e.disPsychosocial,e.disIntellectual,e.summary]);
+    const headers = ['ຊື່ກິດຈະກຳ','ວັນທີ','ຜູ້ໃຫ້ທຶນ','ຍິງ','ຊາຍ','ອື່ນໆ','ອາຍຸ<18','18-35','35-60','60+','ມີຄວາມພິການ','ດ້ານຮ່າງກາຍ','ດ້ານປະສາດສຳພັດ','ດ້ານສັງຄົມຈິດຕະວິທະຍາ','ດ້ານສະໝອງແລະສະຕິປັນຍາ','ສະຫຼຸບ'];
+    const rows = entries.map(e=>[e.activityName,e.activityDate,e.funder,e.female,e.male,e.otherGender,e.ageU18,e.age18_35,e.age35_60,e.age60plus,e.hasDisability,e.disPhysical,e.disSensory,e.disPsychosocial,e.disIntellectual,e.summary]);
     let csv = '\uFEFF' + headers.join(',') + '\n' + rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
     const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
     const url = URL.createObjectURL(blob);

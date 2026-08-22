@@ -611,11 +611,18 @@
             <div class="funder-tag">${e.funder}</div>
             ${e.activityDate? '<div class="funder-tag" style="background:var(--teal);margin-left:6px;">'+e.activityDate+'</div>' : ''}
           </div>
-          <button class="del" data-id="${e.id}">ລຶບ</button>
+          <button class="del" data-id="${e.id}" data-name="${e.activityName.replace(/"/g,'&quot;')}">ລຶບ</button>
         </div>
         <div class="summary">${e.summary}</div>
       </div>`).join('');
-    document.querySelectorAll('.del').forEach(b=>{ b.onclick = ()=>deleteEntry(b.dataset.id); });
+    document.querySelectorAll('.del').forEach(b=>{
+      b.onclick = ()=>{
+        const name = b.dataset.name || 'ກິດຈະກຳນີ້';
+        if(confirm('ເຈົ້າຕ້ອງການລຶບ "' + name + '" ແທ້ບໍ່? ຂໍ້ມູນຈະຖືກລຶບອອກຈາກ Google Sheet ຖາວອນ.')){
+          deleteEntry(b.dataset.id);
+        }
+      };
+    });
   }
 
   $('exportBtn').onclick = ()=>{

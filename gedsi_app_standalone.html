@@ -156,6 +156,7 @@
       </div>
     </div>
     <div class="hidden" id="disTypeFields">
+      <div class="hint" id="disRemainHint" style="margin-bottom:10px;">ໃສ່ຈຳນວນຕາມເພດກ່ອນ ເພື່ອກຳນົດຍອດແບ່ງຄວາມພິການ</div>
       <div class="row2">
         <div class="field"><label>ດ້ານຮ່າງກາຍ</label><input type="number" id="fDisPhysical" min="0" value="0"></div>
         <div class="field"><label>ດ້ານປະສາດສຳພັດ</label><input type="number" id="fDisSensory" min="0" value="0"></div>
@@ -269,6 +270,7 @@
       document.querySelectorAll('#disGroup .choice').forEach(c=>c.classList.remove('sel'));
       el.classList.add('sel'); selDis = el.dataset.val;
       $('disTypeFields').classList.toggle('hidden', selDis !== 'Yes');
+      if(selDis === 'Yes') enforceDisLimit();
       updatePreview();
     };
   });
@@ -281,9 +283,11 @@
 
   const AGE_FIELD_IDS = ['fAgeU18','fAge1835','fAge3560','fAge60plus'];
   const GENDER_FIELD_IDS = ['fFemale','fMale','fOtherGender'];
+  const DIS_FIELD_IDS = ['fDisPhysical','fDisSensory','fDisPsychosocial','fDisIntellectual'];
 
   function genderTotal(){ return GENDER_FIELD_IDS.reduce((sum,id)=>sum+num(id), 0); }
   function ageTotal(){ return AGE_FIELD_IDS.reduce((sum,id)=>sum+num(id), 0); }
+  function disTotal(){ return DIS_FIELD_IDS.reduce((sum,id)=>sum+num(id), 0); }
 
   function enforceAgeLimit(changedId){
     const gTotal = genderTotal();
@@ -312,11 +316,41 @@
     }
   }
 
+  function enforceDisLimit(changedId){
+    const gTotal = genderTotal();
+    if(changedId && DIS_FIELD_IDS.includes(changedId)){
+      const othersSum = DIS_FIELD_IDS.filter(id=>id!==changedId).reduce((sum,id)=>sum+num(id), 0);
+      const maxAllowed = Math.max(0, gTotal - othersSum);
+      if(num(changedId) > maxAllowed){
+        $(changedId).value = maxAllowed;
+      }
+    }
+    const remaining = gTotal - disTotal();
+    const hint = $('disRemainHint');
+    if(!hint) return;
+    if(gTotal === 0){
+      hint.textContent = 'ໃສ່ຈຳນວນຕາມເພດກ່ອນ ເພື່ອກຳນົດຍອດແບ່ງຄວາມພິການ';
+      hint.style.color = 'var(--muted)';
+    } else if(remaining > 0){
+      hint.textContent = 'ຍັງແບ່ງໄດ້ອີກສູງສຸດ ' + remaining + ' ຄົນ (ຈາກຍອດລວມ ' + gTotal + ' ຄົນ)';
+      hint.style.color = 'var(--muted)';
+    } else if(remaining === 0){
+      hint.textContent = 'ຄົນພິການເທົ່າກັບຍອດລວມ ' + gTotal + ' ຄົນ';
+      hint.style.color = 'var(--teal)';
+    } else {
+      hint.textContent = 'ເກີນຍອດລວມ ' + gTotal + ' ຄົນ — ກະລຸນາແກ້ໄຂ';
+      hint.style.color = 'var(--clay)';
+    }
+  }
+
   GENDER_FIELD_IDS.forEach(id=>{
-    $(id).addEventListener('input', ()=>enforceAgeLimit());
+    $(id).addEventListener('input', ()=>{ enforceAgeLimit(); enforceDisLimit(); });
   });
   AGE_FIELD_IDS.forEach(id=>{
     $(id).addEventListener('input', ()=>enforceAgeLimit(id));
+  });
+  DIS_FIELD_IDS.forEach(id=>{
+    $(id).addEventListener('input', ()=>enforceDisLimit(id));
   });
 
   function buildSummary(){
@@ -351,6 +385,7 @@
   }
   updatePreview();
   enforceAgeLimit();
+  enforceDisLimit();
 
   function resetForm(){
     $('fActivity').value=''; $('fFunder').value=''; $('fActivityDate').value = todayStr();
@@ -360,6 +395,7 @@
     document.querySelectorAll('#disGroup .choice').forEach(c=>c.classList.remove('sel'));
     $('disTypeFields').classList.add('hidden');
     enforceAgeLimit();
+    enforceDisLimit();
     updatePreview();
   }
   $('clearBtn').onclick = resetForm;
@@ -446,6 +482,11 @@
     if(genderTotal() > 0 && ageTotal() !== genderTotal()){
       $('toast').style.color='var(--clay)';
       $('toast').textContent = 'ຈຳນວນຕາມອາຍຸ (' + ageTotal() + ') ຕ້ອງລວມໃຫ້ເທົ່າກັບຈຳນວນຕາມເພດ (' + genderTotal() + ')';
+      return;
+    }
+    if(selDis === 'Yes' && genderTotal() > 0 && disTotal() > genderTotal()){
+      $('toast').style.color='var(--clay)';
+      $('toast').textContent = 'ຈຳນວນຄົນພິການ (' + disTotal() + ') ຫຼາຍກວ່າຈຳນວນຜູ້ເຂົ້າຮ່ວມທັງໝົດ (' + genderTotal() + ')';
       return;
     }
 

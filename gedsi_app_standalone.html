@@ -139,6 +139,7 @@
     </div>
 
     <div class="section-sub">ຈຳນວນຜູ້ເຂົ້າຮ່ວມ ຕາມອາຍຸ</div>
+    <div class="hint" id="ageRemainHint" style="margin-bottom:10px;">ໃສ່ຈຳນວນຕາມເພດກ່ອນ ເພື່ອກຳນົດຍອດແບ່ງອາຍຸ</div>
     <div class="row4">
       <div class="field"><label>ຕ່ຳກວ່າ 18 ປີ</label><input type="number" id="fAgeU18" min="0" value="0"></div>
       <div class="field"><label>18 - 35 ປີ</label><input type="number" id="fAge1835" min="0" value="0"></div>
@@ -278,6 +279,46 @@
     $(id).addEventListener('change', updatePreview);
   });
 
+  const AGE_FIELD_IDS = ['fAgeU18','fAge1835','fAge3560','fAge60plus'];
+  const GENDER_FIELD_IDS = ['fFemale','fMale','fOtherGender'];
+
+  function genderTotal(){ return GENDER_FIELD_IDS.reduce((sum,id)=>sum+num(id), 0); }
+  function ageTotal(){ return AGE_FIELD_IDS.reduce((sum,id)=>sum+num(id), 0); }
+
+  function enforceAgeLimit(changedId){
+    const gTotal = genderTotal();
+    // clamp the field that was just changed so the age total never exceeds the gender total
+    if(changedId && AGE_FIELD_IDS.includes(changedId)){
+      const othersSum = AGE_FIELD_IDS.filter(id=>id!==changedId).reduce((sum,id)=>sum+num(id), 0);
+      const maxAllowed = Math.max(0, gTotal - othersSum);
+      if(num(changedId) > maxAllowed){
+        $(changedId).value = maxAllowed;
+      }
+    }
+    const remaining = gTotal - ageTotal();
+    const hint = $('ageRemainHint');
+    if(gTotal === 0){
+      hint.textContent = 'ໃສ່ຈຳນວນຕາມເພດກ່ອນ ເພື່ອກຳນົດຍອດແບ່ງອາຍຸ';
+      hint.style.color = 'var(--muted)';
+    } else if(remaining > 0){
+      hint.textContent = 'ຍັງແບ່ງໄດ້ອີກ ' + remaining + ' ຄົນ (ຈາກຍອດລວມ ' + gTotal + ' ຄົນ)';
+      hint.style.color = 'var(--muted)';
+    } else if(remaining === 0){
+      hint.textContent = '✓ ແບ່ງຄົບ ' + gTotal + ' ຄົນແລ້ວ';
+      hint.style.color = 'var(--teal)';
+    } else {
+      hint.textContent = 'ເກີນຍອດລວມ ' + gTotal + ' ຄົນ — ກະລຸນາແກ້ໄຂ';
+      hint.style.color = 'var(--clay)';
+    }
+  }
+
+  GENDER_FIELD_IDS.forEach(id=>{
+    $(id).addEventListener('input', ()=>enforceAgeLimit());
+  });
+  AGE_FIELD_IDS.forEach(id=>{
+    $(id).addEventListener('input', ()=>enforceAgeLimit(id));
+  });
+
   function buildSummary(){
     const female = num('fFemale'), male = num('fMale'), other = num('fOtherGender');
     const total = female + male + other;
@@ -309,6 +350,7 @@
     $('summaryPreview').textContent = buildSummary();
   }
   updatePreview();
+  enforceAgeLimit();
 
   function resetForm(){
     $('fActivity').value=''; $('fFunder').value=''; $('fActivityDate').value = todayStr();
@@ -317,6 +359,7 @@
     selDis = null;
     document.querySelectorAll('#disGroup .choice').forEach(c=>c.classList.remove('sel'));
     $('disTypeFields').classList.add('hidden');
+    enforceAgeLimit();
     updatePreview();
   }
   $('clearBtn').onclick = resetForm;
@@ -398,6 +441,11 @@
     if(!selDis){
       $('toast').style.color='var(--clay)';
       $('toast').textContent = 'ກະລຸນາລະບຸວ່າມີຜູ້ເຂົ້າຮ່ວມທີ່ມີຄວາມພິການບໍ';
+      return;
+    }
+    if(genderTotal() > 0 && ageTotal() !== genderTotal()){
+      $('toast').style.color='var(--clay)';
+      $('toast').textContent = 'ຈຳນວນຕາມອາຍຸ (' + ageTotal() + ') ຕ້ອງລວມໃຫ້ເທົ່າກັບຈຳນວນຕາມເພດ (' + genderTotal() + ')';
       return;
     }
 
